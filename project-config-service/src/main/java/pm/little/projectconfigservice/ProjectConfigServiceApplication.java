@@ -1,13 +1,13 @@
-package pm.little.projconfservice;
+package pm.little.projectconfigservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProjConfServiceApplication {
+public class ProjectConfigServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProjConfServiceApplication.class, args);
+        SpringApplication.run(ProjectConfigServiceApplication.class, args);
     }
 
 }
