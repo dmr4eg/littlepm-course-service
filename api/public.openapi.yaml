@@ -1,0 +1,375 @@
+openapi: 3.0.3
+info:
+  title: Little PM API
+  version: 1.0.0
+  description: |
+    Comprehensive project management API with task tracking, reporting,
+    and video resources. Provides secure access control and project organization.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: https://app.little.pm
+    description: Production API
+
+tags:
+  - name: Projects
+    description: Project lifecycle management
+
+paths:
+  /projects:
+    post:
+      tags: [Projects]
+      summary: Create project from blueprint
+      description: Create project from blueprint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                blueprintUUID:
+                  $ref: '#/components/schemas/uuid'
+                name:
+                  type: string
+      parameters:
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/offset"
+        - $ref: "#/components/parameters/blueprintType"
+
+      responses:
+        '202':
+          description: Project was created from a blueprint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags: [Projects]
+      summary: List accessible projects
+      description: Retrieve paginated list of projects with user access
+      operationId: listProjects
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/offset"
+        - $ref: "#/components/parameters/projectStatusFilter"
+      responses:
+        '200':
+          description: Successful project list retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /projects/blueprints:
+    get:
+      tags: [Projects]
+      summary: List available blueprints
+      description: Retrieve paginated list of blueprints for projects with user access
+      operationId: listBlueprintsProject
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/offset"
+      responses:
+        '200':
+          description: Successful project list retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectBlueprint'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /projects/{projectUUID}:
+    parameters:
+      - $ref: "#/components/parameters/projectUUID"
+    get:
+      tags: [Projects]
+      summary: Get project details
+      description: Retrieve detailed information about a specific project
+      operationId: getProject
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Project details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags: [Projects]
+      summary: Update project
+      description: Update project metadata and details
+      operationId: updateProject
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+      responses:
+        '200':
+          description: Project updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Valid JWT token required for authenticated endpoints
+
+  parameters:
+    limit:
+      name: limit
+      in: query
+      description: Maximum number of items to return
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    offset:
+      name: offset
+      in: query
+      description: Pagination offset
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    projectUUID:
+      name: projectUUID
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+      description: Unique project identifier
+    taskUUID:
+      name: taskUUID
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+      description: Unique task identifier
+    blueprintUUID:
+      name: blueprintUUID
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+      description: Unique task identifier
+    reportUUID:
+      name: reportUUID
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+      description: Unique report identifier
+    videoUUID:
+      name: videoUUID
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+      description: Unique video identifier
+    roleFilter:
+      name: role
+      in: query
+      description: Filter by user role
+      schema:
+        type: string
+        enum: [owner, member]
+    taskStatusFilter:
+      name: status
+      in: query
+      description: Filter tasks by status
+      schema:
+        type: string
+        enum: [pending, in_progress, completed]
+    blueprintType:
+      name: status
+      in: query
+      description: Blueprints by its type
+      schema:
+        type: string
+        enum: [toy]
+    projectStatusFilter:
+      name: status
+      in: query
+      description: Filter tasks by status
+      schema:
+        type: string
+        enum: [in_progress, completed]
+
+
+  schemas:
+    uuid:
+      type: string
+      format: uuid
+      example: "550e8400-e29b-41d4-a716-446655440000"
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 404
+        message:
+          type: string
+          example: "Resource not found"
+        details:
+          type: array
+          items:
+            type: string
+          example: ["Invalid UUID format", "Missing required field"]
+
+    Project:
+      type: object
+      required: [projectUUID, name, ownerUUID]
+      properties:
+        projectUUID:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          example: "Q4 Marketing Campaign"
+        description:
+          type: string
+          example: "Year-end marketing push"
+        ownerUUID:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ProjectBlueprint:
+      type: object
+      required: [blueprintUUID, projectUUID, title]
+      properties:
+        blueprintUUID:
+          $ref: '#/components/schemas/uuid'
+        title:
+          type: string
+          example: "Marketing Blueprint"
+        description:
+          type: string
+          example: "Q4 marketing strategy"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ProjectUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Project Name"
+        description:
+          type: string
+          example: "Revised project scope"
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: "Validation error"
+            details: ["Invalid date format", "Missing required field: title"]
+
+    UnauthorizedError:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: "Authentication required"
+
+    ForbiddenError:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 403
+            message: "Insufficient permissions"
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: "Project not found"
+
+    InternalServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 500
+            message: "Internal server error"
