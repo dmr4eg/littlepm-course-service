@@ -1,20 +1,13 @@
 package pm.little.api.models;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
 import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 
 /**
  * ProjectsPostRequest

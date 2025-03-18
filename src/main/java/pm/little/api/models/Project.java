@@ -1,9 +1,8 @@
 package pm.little.api.models;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -11,24 +10,21 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-
 /**
- * ProjectBlueprint
+ * Project
  */
 
-public class ProjectBlueprint {
+public class Project {
 
-  private UUID blueprintUUID;
+  private UUID projectUUID;
 
-  private String title;
+  private String name;
 
   private @Nullable String description;
+
+  private UUID ownerUUID;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime createdAt;
@@ -36,60 +32,61 @@ public class ProjectBlueprint {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime updatedAt;
 
-  public ProjectBlueprint() {
+  public Project() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public ProjectBlueprint(UUID blueprintUUID, String title) {
-    this.blueprintUUID = blueprintUUID;
-    this.title = title;
+  public Project(UUID projectUUID, String name, UUID ownerUUID) {
+    this.projectUUID = projectUUID;
+    this.name = name;
+    this.ownerUUID = ownerUUID;
   }
 
-  public ProjectBlueprint blueprintUUID(UUID blueprintUUID) {
-    this.blueprintUUID = blueprintUUID;
+  public Project projectUUID(UUID projectUUID) {
+    this.projectUUID = projectUUID;
     return this;
   }
 
   /**
-   * Get blueprintUUID
-   * @return blueprintUUID
+   * Get projectUUID
+   * @return projectUUID
    */
   @NotNull
   @Valid
-  @Schema(name = "blueprintUUID", example = "550e8400-e29b-41d4-a716-446655440000", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("blueprintUUID")
-  public UUID getBlueprintUUID() {
-    return blueprintUUID;
+  @Schema(name = "projectUUID", example = "550e8400-e29b-41d4-a716-446655440000", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("projectUUID")
+  public UUID getProjectUUID() {
+    return projectUUID;
   }
 
-  public void setBlueprintUUID(UUID blueprintUUID) {
-    this.blueprintUUID = blueprintUUID;
+  public void setProjectUUID(UUID projectUUID) {
+    this.projectUUID = projectUUID;
   }
 
-  public ProjectBlueprint title(String title) {
-    this.title = title;
+  public Project name(String name) {
+    this.name = name;
     return this;
   }
 
   /**
-   * Get title
-   * @return title
+   * Get name
+   * @return name
    */
   @NotNull 
-  @Schema(name = "title", example = "Marketing Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("title")
-  public String getTitle() {
-    return title;
+  @Schema(name = "name", example = "Q4 Marketing Campaign", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("name")
+  public String getName() {
+    return name;
   }
 
-  public void setTitle(String title) {
-    this.title = title;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public ProjectBlueprint description(String description) {
+  public Project description(String description) {
     this.description = description;
     return this;
   }
@@ -99,7 +96,7 @@ public class ProjectBlueprint {
    * @return description
    */
   
-  @Schema(name = "description", example = "Q4 marketing strategy", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "description", example = "Year-end marketing push", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;
@@ -109,7 +106,27 @@ public class ProjectBlueprint {
     this.description = description;
   }
 
-  public ProjectBlueprint createdAt(OffsetDateTime createdAt) {
+  public Project ownerUUID(UUID ownerUUID) {
+    this.ownerUUID = ownerUUID;
+    return this;
+  }
+
+  /**
+   * Get ownerUUID
+   * @return ownerUUID
+   */
+  @NotNull @Valid 
+  @Schema(name = "ownerUUID", example = "550e8400-e29b-41d4-a716-446655440000", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("ownerUUID")
+  public UUID getOwnerUUID() {
+    return ownerUUID;
+  }
+
+  public void setOwnerUUID(UUID ownerUUID) {
+    this.ownerUUID = ownerUUID;
+  }
+
+  public Project createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -129,7 +146,7 @@ public class ProjectBlueprint {
     this.createdAt = createdAt;
   }
 
-  public ProjectBlueprint updatedAt(OffsetDateTime updatedAt) {
+  public Project updatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -157,26 +174,28 @@ public class ProjectBlueprint {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProjectBlueprint projectBlueprint = (ProjectBlueprint) o;
-    return Objects.equals(this.blueprintUUID, projectBlueprint.blueprintUUID) &&
-        Objects.equals(this.title, projectBlueprint.title) &&
-        Objects.equals(this.description, projectBlueprint.description) &&
-        Objects.equals(this.createdAt, projectBlueprint.createdAt) &&
-        Objects.equals(this.updatedAt, projectBlueprint.updatedAt);
+    Project project = (Project) o;
+    return Objects.equals(this.projectUUID, project.projectUUID) &&
+        Objects.equals(this.name, project.name) &&
+        Objects.equals(this.description, project.description) &&
+        Objects.equals(this.ownerUUID, project.ownerUUID) &&
+        Objects.equals(this.createdAt, project.createdAt) &&
+        Objects.equals(this.updatedAt, project.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(blueprintUUID, title, description, createdAt, updatedAt);
+    return Objects.hash(projectUUID, name, description, ownerUUID, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ProjectBlueprint {\n");
-    sb.append("    blueprintUUID: ").append(toIndentedString(blueprintUUID)).append("\n");
-    sb.append("    title: ").append(toIndentedString(title)).append("\n");
+    sb.append("class Project {\n");
+    sb.append("    projectUUID: ").append(toIndentedString(projectUUID)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    ownerUUID: ").append(toIndentedString(ownerUUID)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
