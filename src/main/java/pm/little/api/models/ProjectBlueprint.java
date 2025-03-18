@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,8 +18,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * ProjectBlueprint
  */
 
+@Entity
 public class ProjectBlueprint {
-
+  @Id
   private UUID blueprintUUID;
 
   private String title;

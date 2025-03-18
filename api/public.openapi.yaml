@@ -266,11 +266,6 @@ components:
         message:
           type: string
           example: "Resource not found"
-        details:
-          type: array
-          items:
-            type: string
-          example: ["Invalid UUID format", "Missing required field"]
 
     Project:
       type: object

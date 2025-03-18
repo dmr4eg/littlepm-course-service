@@ -32,4 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
+*DS_Store
+*.mvn/
+*.idea/
 ../api/gen/

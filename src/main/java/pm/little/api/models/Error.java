@@ -2,26 +2,22 @@ package pm.little.api.models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.validation.Valid;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import org.springframework.lang.Nullable;
+
+
 import io.swagger.v3.oas.annotations.media.Schema;
+
+
 
 /**
  * Error
  */
-
 public class Error {
-
   private @Nullable Integer code;
 
   private @Nullable String message;
-
-  @Valid
-  private List<String> details = new ArrayList<>();
 
   public Error code(Integer code) {
     this.code = code;
@@ -63,34 +59,6 @@ public class Error {
     this.message = message;
   }
 
-  public Error details(List<String> details) {
-    this.details = details;
-    return this;
-  }
-
-  public Error addDetailsItem(String detailsItem) {
-    if (this.details == null) {
-      this.details = new ArrayList<>();
-    }
-    this.details.add(detailsItem);
-    return this;
-  }
-
-  /**
-   * Get details
-   * @return details
-   */
-  
-  @Schema(name = "details", example = "[\"Invalid UUID format\",\"Missing required field\"]", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("details")
-  public List<String> getDetails() {
-    return details;
-  }
-
-  public void setDetails(List<String> details) {
-    this.details = details;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -101,13 +69,12 @@ public class Error {
     }
     Error error = (Error) o;
     return Objects.equals(this.code, error.code) &&
-        Objects.equals(this.message, error.message) &&
-        Objects.equals(this.details, error.details);
+        Objects.equals(this.message, error.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, details);
+    return Objects.hash(code, message);
   }
 
   @Override
@@ -116,7 +83,6 @@ public class Error {
     sb.append("class Error {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
-    sb.append("    details: ").append(toIndentedString(details)).append("\n");
     sb.append("}");
     return sb.toString();
   }
