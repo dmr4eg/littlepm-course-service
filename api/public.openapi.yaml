@@ -36,7 +36,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/limit"
         - $ref: "#/components/parameters/offset"
-        - $ref: "#/components/parameters/blueprintType"
+        - $ref: "#/components/parameters/blueprintUUID"
 
       responses:
         '202':
@@ -234,13 +234,6 @@ components:
       schema:
         type: string
         enum: [pending, in_progress, completed]
-    blueprintType:
-      name: status
-      in: query
-      description: Blueprints by its type
-      schema:
-        type: string
-        enum: [toy]
     projectStatusFilter:
       name: status
       in: query
@@ -269,24 +262,32 @@ components:
 
     Project:
       type: object
-      required: [projectUUID, name, ownerUUID]
+      required: [projectUUID, name, userUUID]
       properties:
         projectUUID:
           $ref: '#/components/schemas/uuid'
         name:
           type: string
           example: "Q4 Marketing Campaign"
+        status:
+          enum: [in_progress, completed]
         description:
           type: string
           example: "Year-end marketing push"
-        ownerUUID:
+        userUUID:
           $ref: '#/components/schemas/uuid'
         createdAt:
           type: string
           format: date-time
+          example: "2021-10-01T12:00:00Z"
         updatedAt:
           type: string
           format: date-time
+          example: "2021-10-01T12:00:00Z"
+        projectImage:
+          type: string
+          format: uri
+          example: "https://example.com/image.jpg"
 
     ProjectBlueprint:
       type: object
@@ -300,22 +301,19 @@ components:
         description:
           type: string
           example: "Q4 marketing strategy"
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
 
     ProjectUpdate:
       type: object
+      required: [projectUUID]
       properties:
         name:
           type: string
-          example: "Updated Project Name"
-        description:
+          example: "Q4 Marketing Campaign"
+        status:
+          enum: [ in_progress, completed ]
+        updatedAt:
           type: string
-          example: "Revised project scope"
+          format: date-time
 
   responses:
     BadRequest:

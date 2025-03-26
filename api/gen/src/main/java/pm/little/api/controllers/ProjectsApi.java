@@ -5,18 +5,16 @@
  */
 package pm.little.api.controllers;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import pm.little.api.models.Error;
 import pm.little.api.models.Project;
 import pm.little.api.models.ProjectBlueprint;
 import pm.little.api.models.ProjectUpdate;
 import pm.little.api.models.ProjectsPostRequest;
 import java.util.UUID;
-
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,10 +28,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Generated;
 
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-22T16:32:52.983981+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
 @Tag(name = "Projects", description = "Project lifecycle management")
 public interface ProjectsApi {
@@ -87,7 +91,7 @@ public interface ProjectsApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"createdAt\" : \"2021-10-01T12:00:00Z\", \"projectImage\" : \"https://example.com/image.jpg\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"userUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2021-10-01T12:00:00Z\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -222,7 +226,7 @@ public interface ProjectsApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }, { \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" } ]";
+                    String exampleString = "[ { \"createdAt\" : \"2021-10-01T12:00:00Z\", \"projectImage\" : \"https://example.com/image.jpg\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"userUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2021-10-01T12:00:00Z\" }, { \"createdAt\" : \"2021-10-01T12:00:00Z\", \"projectImage\" : \"https://example.com/image.jpg\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"userUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2021-10-01T12:00:00Z\" } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -296,7 +300,7 @@ public interface ProjectsApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"createdAt\" : \"2021-10-01T12:00:00Z\", \"projectImage\" : \"https://example.com/image.jpg\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"userUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2021-10-01T12:00:00Z\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -379,7 +383,7 @@ public interface ProjectsApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"createdAt\" : \"2021-10-01T12:00:00Z\", \"projectImage\" : \"https://example.com/image.jpg\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"userUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2021-10-01T12:00:00Z\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

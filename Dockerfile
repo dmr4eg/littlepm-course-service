@@ -3,12 +3,12 @@ FROM maven:3.8.7-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy the Maven project files into the container
-COPY project-config-service/pom.xml .
+COPY pom.xml .
 # Download any needed dependencies; this helps with caching in Docker
 RUN mvn dependency:go-offline -B
 
 # Now copy the entire source and build the JAR
-COPY project-config-service/src ./src
+COPY /src ./src
 RUN mvn clean package -DskipTests
 
 # 2) Runtime stage: use a lightweight JRE to run the built application

@@ -1,49 +1,84 @@
 package pm.little.api.models;
 
+import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-import pm.little.api.models.enums.StatusEnum;
 
+
+import java.util.*;
+import javax.annotation.Generated;
 
 /**
  * Project
  */
 
-@Entity
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-22T16:32:52.983981+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class Project {
-  @Id
-  @NotNull
-  @GeneratedValue(strategy = GenerationType.UUID)
+
   private UUID projectUUID;
 
   private String name;
+
+  /**
+   * Gets or Sets status
+   */
+  public enum StatusEnum {
+    IN_PROGRESS("in_progress"),
+    
+    COMPLETED("completed");
+
+    private String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static StatusEnum fromValue(String value) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
 
   private @Nullable StatusEnum status;
 
   private @Nullable String description;
 
-  private UUID ownerUUID;
+  private UUID userUUID;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime createdAt;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime updatedAt;
+
+  private @Nullable URI projectImage;
 
   public Project() {
     super();
@@ -52,10 +87,10 @@ public class Project {
   /**
    * Constructor with only required parameters
    */
-  public Project(UUID projectUUID, String name, UUID ownerUUID) {
+  public Project(UUID projectUUID, String name, UUID userUUID) {
     this.projectUUID = projectUUID;
     this.name = name;
-    this.ownerUUID = ownerUUID;
+    this.userUUID = userUUID;
   }
 
   public Project projectUUID(UUID projectUUID) {
@@ -67,7 +102,7 @@ public class Project {
    * Get projectUUID
    * @return projectUUID
    */
-  @NotNull @Valid
+  @NotNull @Valid 
   @Schema(name = "projectUUID", example = "550e8400-e29b-41d4-a716-446655440000", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("projectUUID")
   public UUID getProjectUUID() {
@@ -138,24 +173,24 @@ public class Project {
     this.description = description;
   }
 
-  public Project ownerUUID(UUID ownerUUID) {
-    this.ownerUUID = ownerUUID;
+  public Project userUUID(UUID userUUID) {
+    this.userUUID = userUUID;
     return this;
   }
 
   /**
-   * Get ownerUUID
-   * @return ownerUUID
+   * Get userUUID
+   * @return userUUID
    */
   @NotNull @Valid 
-  @Schema(name = "ownerUUID", example = "550e8400-e29b-41d4-a716-446655440000", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("ownerUUID")
-  public UUID getOwnerUUID() {
-    return ownerUUID;
+  @Schema(name = "userUUID", example = "550e8400-e29b-41d4-a716-446655440000", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("userUUID")
+  public UUID getUserUUID() {
+    return userUUID;
   }
 
-  public void setOwnerUUID(UUID ownerUUID) {
-    this.ownerUUID = ownerUUID;
+  public void setUserUUID(UUID userUUID) {
+    this.userUUID = userUUID;
   }
 
   public Project createdAt(OffsetDateTime createdAt) {
@@ -168,7 +203,7 @@ public class Project {
    * @return createdAt
    */
   @Valid 
-  @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "createdAt", example = "2021-10-01T12:00Z", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
@@ -188,7 +223,7 @@ public class Project {
    * @return updatedAt
    */
   @Valid 
-  @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "updatedAt", example = "2021-10-01T12:00Z", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
@@ -196,6 +231,26 @@ public class Project {
 
   public void setUpdatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
+  }
+
+  public Project projectImage(URI projectImage) {
+    this.projectImage = projectImage;
+    return this;
+  }
+
+  /**
+   * Get projectImage
+   * @return projectImage
+   */
+  @Valid 
+  @Schema(name = "projectImage", example = "https://example.com/image.jpg", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("projectImage")
+  public URI getProjectImage() {
+    return projectImage;
+  }
+
+  public void setProjectImage(URI projectImage) {
+    this.projectImage = projectImage;
   }
 
   @Override
@@ -211,14 +266,15 @@ public class Project {
         Objects.equals(this.name, project.name) &&
         Objects.equals(this.status, project.status) &&
         Objects.equals(this.description, project.description) &&
-        Objects.equals(this.ownerUUID, project.ownerUUID) &&
+        Objects.equals(this.userUUID, project.userUUID) &&
         Objects.equals(this.createdAt, project.createdAt) &&
-        Objects.equals(this.updatedAt, project.updatedAt);
+        Objects.equals(this.updatedAt, project.updatedAt) &&
+        Objects.equals(this.projectImage, project.projectImage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(projectUUID, name, status, description, ownerUUID, createdAt, updatedAt);
+    return Objects.hash(projectUUID, name, status, description, userUUID, createdAt, updatedAt, projectImage);
   }
 
   @Override
@@ -229,9 +285,10 @@ public class Project {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    ownerUUID: ").append(toIndentedString(ownerUUID)).append("\n");
+    sb.append("    userUUID: ").append(toIndentedString(userUUID)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
+    sb.append("    projectImage: ").append(toIndentedString(projectImage)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -2,8 +2,17 @@ package pm.little.api.models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.time.OffsetDateTime;
+
+import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import pm.little.api.models.enums.StatusEnum;
+
 
 /**
  * ProjectUpdate
@@ -13,7 +22,10 @@ public class ProjectUpdate {
 
   private @Nullable String name;
 
-  private @Nullable String description;
+  private @Nullable StatusEnum status;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private @Nullable OffsetDateTime updatedAt;
 
   public ProjectUpdate name(String name) {
     this.name = name;
@@ -24,8 +36,7 @@ public class ProjectUpdate {
    * Get name
    * @return name
    */
-  
-  @Schema(name = "name", example = "Updated Project Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "name", example = "Q4 Marketing Campaign", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
@@ -35,24 +46,44 @@ public class ProjectUpdate {
     this.name = name;
   }
 
-  public ProjectUpdate description(String description) {
-    this.description = description;
+  public ProjectUpdate status(StatusEnum status) {
+    this.status = status;
     return this;
   }
 
   /**
-   * Get description
-   * @return description
+   * Get status
+   * @return status
    */
   
-  @Schema(name = "description", example = "Revised project scope", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("description")
-  public String getDescription() {
-    return description;
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("status")
+  public StatusEnum getStatus() {
+    return status;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
+
+  public ProjectUpdate updatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+    return this;
+  }
+
+  /**
+   * Get updatedAt
+   * @return updatedAt
+   */
+  @Valid
+  @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("updatedAt")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
   }
 
   @Override
@@ -65,12 +96,13 @@ public class ProjectUpdate {
     }
     ProjectUpdate projectUpdate = (ProjectUpdate) o;
     return Objects.equals(this.name, projectUpdate.name) &&
-        Objects.equals(this.description, projectUpdate.description);
+        Objects.equals(this.status, projectUpdate.status) &&
+        Objects.equals(this.updatedAt, projectUpdate.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description);
+    return Objects.hash(name, status, updatedAt);
   }
 
   @Override
@@ -78,7 +110,8 @@ public class ProjectUpdate {
     StringBuilder sb = new StringBuilder();
     sb.append("class ProjectUpdate {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }
