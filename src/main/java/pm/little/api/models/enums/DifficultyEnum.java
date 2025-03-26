@@ -3,16 +3,16 @@ package pm.little.api.models.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum StatusEnum {
-    IN_PROGRESS("in_progress"),
+public enum DifficultyEnum {
+    EASY("easy"),
 
-    COMPLETED("completed"),
+    MEDIUM("medium"),
 
-    NOT_STARTED("not_started");
+    HARD("hard");
 
     private String value;
 
-    StatusEnum(String value) {
+    DifficultyEnum(String value) {
         this.value = value;
     }
 
@@ -27,8 +27,8 @@ public enum StatusEnum {
     }
 
     @JsonCreator
-    public static StatusEnum fromValue(String value) {
-        for (StatusEnum b : StatusEnum.values()) {
+    public static DifficultyEnum fromValue(String value) {
+        for (DifficultyEnum b : DifficultyEnum.values()) {
             if (b.value.equals(value)) {
                 return b;
             }

@@ -4,7 +4,11 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.util.UUID;
+
 import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
 import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -16,33 +20,33 @@ import java.util.*;
 
 
 /**
- * Error object
+ * UserUserUuidProjectPostRequest
  */
 
-@Schema(name = "Error", description = "Error object")
+@JsonTypeName("_user__user_uuid__project_post_request")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
-public class Error {
+public class UserUserUuidProjectPostRequest {
 
-  private @Nullable String message;
+  private @Nullable UUID projectBlueprintUuid;
 
-  public Error message(String message) {
-    this.message = message;
+  public UserUserUuidProjectPostRequest projectBlueprintUuid(UUID projectBlueprintUuid) {
+    this.projectBlueprintUuid = projectBlueprintUuid;
     return this;
   }
 
   /**
-   * Error message
-   * @return message
+   * Get projectBlueprintUuid
+   * @return projectBlueprintUuid
    */
-  
-  @Schema(name = "message", example = "Error message", description = "Error message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("message")
-  public String getMessage() {
-    return message;
+  @Valid
+  @Schema(name = "project_blueprint_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("project_blueprint_uuid")
+  public UUID getProjectBlueprintUuid() {
+    return projectBlueprintUuid;
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setProjectBlueprintUuid(UUID projectBlueprintUuid) {
+    this.projectBlueprintUuid = projectBlueprintUuid;
   }
 
   @Override
@@ -53,20 +57,20 @@ public class Error {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Error error = (Error) o;
-    return Objects.equals(this.message, error.message);
+    UserUserUuidProjectPostRequest userUserUuidProjectPostRequest = (UserUserUuidProjectPostRequest) o;
+    return Objects.equals(this.projectBlueprintUuid, userUserUuidProjectPostRequest.projectBlueprintUuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message);
+    return Objects.hash(projectBlueprintUuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Error {\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("class UserUserUuidProjectPostRequest {\n");
+    sb.append("    projectBlueprintUuid: ").append(toIndentedString(projectBlueprintUuid)).append("\n");
     sb.append("}");
     return sb.toString();
   }

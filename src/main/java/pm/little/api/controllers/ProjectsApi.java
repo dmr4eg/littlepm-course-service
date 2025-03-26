@@ -5,18 +5,16 @@
  */
 package pm.little.api.controllers;
 
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import pm.little.api.models.Error;
-import pm.little.api.models.Project;
+import jakarta.validation.constraints.NotNull;
 import pm.little.api.models.ProjectBlueprint;
-import pm.little.api.models.ProjectUpdate;
-import pm.little.api.models.ProjectsPostRequest;
+import pm.little.api.models.ProjectDaysMapper;
 import java.util.UUID;
-
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,12 +28,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "Projects", description = "Project lifecycle management")
+@Tag(name = "projects", description = "the projects API")
 public interface ProjectsApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -43,169 +46,21 @@ public interface ProjectsApi {
     }
 
     /**
-     * GET /projects/{projectUUID} : Get project details
-     * Retrieve detailed information about a specific project
+     * GET /projects : List project blueprints
+     * List project blueprints (paginated)
      *
-     * @param projectUUID Unique project identifier (required)
-     * @return Project details retrieved (status code 200)
-     *         or Insufficient permissions (status code 403)
-     *         or Resource not found (status code 404)
-     *         or Server error (status code 500)
+     * @param limit Maximum number of items to return (optional)
+     * @param offset Number of items to skip before starting to collect the result set (optional)
+     * @return A list of project blueprints (status code 200)
      */
     @Operation(
-        operationId = "getProject",
-        summary = "Get project details",
-        description = "Retrieve detailed information about a specific project",
-        tags = { "Projects" },
+        operationId = "projectsGet",
+        summary = "List project blueprints",
+        description = "List project blueprints (paginated)",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Project details retrieved", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
-            }),
-            @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Resource not found", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Server error", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            })
-        },
-        security = {
-            @SecurityRequirement(name = "bearerAuth")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/projects/{projectUUID}",
-        produces = { "application/json" }
-    )
-    
-    default ResponseEntity<Project> getProject(
-        @Parameter(name = "projectUUID", description = "Unique project identifier", required = true, in = ParameterIn.PATH) @PathVariable("projectUUID") UUID projectUUID
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /projects/blueprints : List available blueprints
-     * Retrieve paginated list of blueprints for projects with user access
-     *
-     * @param limit Maximum number of items to return (optional, default to 20)
-     * @param offset Pagination offset (optional, default to 0)
-     * @return Successful project list retrieval (status code 200)
-     *         or Missing or invalid authentication (status code 401)
-     *         or Server error (status code 500)
-     */
-    @Operation(
-        operationId = "listBlueprintsProject",
-        summary = "List available blueprints",
-        description = "Retrieve paginated list of blueprints for projects with user access",
-        tags = { "Projects" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Successful project list retrieval", content = {
+            @ApiResponse(responseCode = "200", description = "A list of project blueprints", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectBlueprint.class)))
-            }),
-            @ApiResponse(responseCode = "401", description = "Missing or invalid authentication", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Server error", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
             })
-        },
-        security = {
-            @SecurityRequirement(name = "bearerAuth")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/projects/blueprints",
-        produces = { "application/json" }
-    )
-    
-    default ResponseEntity<List<ProjectBlueprint>> listBlueprintsProject(
-        @Min(1) @Max(100) @Parameter(name = "limit", description = "Maximum number of items to return", in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
-        @Min(0) @Parameter(name = "offset", description = "Pagination offset", in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"blueprintUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"Q4 marketing strategy\", \"title\" : \"Marketing Blueprint\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }, { \"blueprintUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"Q4 marketing strategy\", \"title\" : \"Marketing Blueprint\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" } ]";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /projects : List accessible projects
-     * Retrieve paginated list of projects with user access
-     *
-     * @param limit Maximum number of items to return (optional, default to 20)
-     * @param offset Pagination offset (optional, default to 0)
-     * @param status Filter tasks by status (optional)
-     * @return Successful project list retrieval (status code 200)
-     *         or Missing or invalid authentication (status code 401)
-     *         or Server error (status code 500)
-     */
-    @Operation(
-        operationId = "listProjects",
-        summary = "List accessible projects",
-        description = "Retrieve paginated list of projects with user access",
-        tags = { "Projects" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Successful project list retrieval", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Project.class)))
-            }),
-            @ApiResponse(responseCode = "401", description = "Missing or invalid authentication", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Server error", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            })
-        },
-        security = {
-            @SecurityRequirement(name = "bearerAuth")
         }
     )
     @RequestMapping(
@@ -214,25 +69,14 @@ public interface ProjectsApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<List<Project>> listProjects(
-        @Min(1) @Max(100) @Parameter(name = "limit", description = "Maximum number of items to return", in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
-        @Min(0) @Parameter(name = "offset", description = "Pagination offset", in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-        @Parameter(name = "status", description = "Filter tasks by status", in = ParameterIn.QUERY) @Valid @RequestParam(value = "status", required = false) String status
+    default ResponseEntity<List<ProjectBlueprint>> projectsGet(
+        @Parameter(name = "limit", description = "Maximum number of items to return", in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = false) Integer limit,
+        @Parameter(name = "offset", description = "Number of items to skip before starting to collect the result set", in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = false) Integer offset
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }, { \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" } ]";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
+                    String exampleString = "[ { \"difficulty\" : \"easy\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"dyi\", \"title\" : \"title\" }, { \"difficulty\" : \"easy\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"dyi\", \"title\" : \"title\" } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -244,40 +88,23 @@ public interface ProjectsApi {
 
 
     /**
-     * POST /projects : Create project from blueprint
-     * Create project from blueprint
+     * POST /projects : Create new project blueprint
+     * Create new project blueprint (admin only)
      *
-     * @param blueprintUUID Unique task identifier (required)
-     * @param limit Maximum number of items to return (optional, default to 20)
-     * @param offset Pagination offset (optional, default to 0)
-     * @param projectsPostRequest  (optional)
-     * @return Project was created from a blueprint (status code 202)
-     *         or Invalid request parameters (status code 400)
-     *         or Insufficient permissions (status code 403)
-     *         or Resource not found (status code 404)
-     *         or Server error (status code 500)
+     * @param projectBlueprint  (required)
+     * @return The created project blueprint (status code 200)
      */
     @Operation(
         operationId = "projectsPost",
-        summary = "Create project from blueprint",
-        description = "Create project from blueprint",
-        tags = { "Projects" },
+        summary = "Create new project blueprint",
+        description = "Create new project blueprint (admin only)",
         responses = {
-            @ApiResponse(responseCode = "202", description = "Project was created from a blueprint", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Invalid request parameters", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Resource not found", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Server error", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
+            @ApiResponse(responseCode = "200", description = "The created project blueprint", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
             })
+        },
+        security = {
+            @SecurityRequirement(name = "admin_jwt")
         }
     )
     @RequestMapping(
@@ -287,36 +114,13 @@ public interface ProjectsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<Project> projectsPost(
-        @Parameter(name = "blueprintUUID", description = "Unique task identifier", required = true, in = ParameterIn.PATH) @PathVariable("blueprintUUID") UUID blueprintUUID,
-        @Min(1) @Max(100) @Parameter(name = "limit", description = "Maximum number of items to return", in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
-        @Min(0) @Parameter(name = "offset", description = "Pagination offset", in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-        @Parameter(name = "ProjectsPostRequest", description = "") @Valid @RequestBody(required = false) ProjectsPostRequest projectsPostRequest
+    default ResponseEntity<ProjectBlueprint> projectsPost(
+        @Parameter(name = "ProjectBlueprint", description = "", required = true) @Valid @RequestBody ProjectBlueprint projectBlueprint
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
+                    String exampleString = "{ \"difficulty\" : \"easy\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"dyi\", \"title\" : \"title\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -328,78 +132,236 @@ public interface ProjectsApi {
 
 
     /**
-     * PUT /projects/{projectUUID} : Update project
-     * Update project metadata and details
+     * DELETE /projects/{project_blueprint_uuid}/days : Unlink a day from a project blueprint
+     * Unlink day from project (admin only)
      *
-     * @param projectUUID Unique project identifier (required)
-     * @param projectUpdate  (required)
-     * @return Project updated successfully (status code 200)
-     *         or Invalid request parameters (status code 400)
-     *         or Insufficient permissions (status code 403)
-     *         or Resource not found (status code 404)
-     *         or Server error (status code 500)
+     * @param projectBlueprintUuid The UUID of the project blueprint (required)
+     * @param dayBlueprintUuid The UUID of the day blueprint (required)
+     * @return No Content (status code 204)
      */
     @Operation(
-        operationId = "updateProject",
-        summary = "Update project",
-        description = "Update project metadata and details",
-        tags = { "Projects" },
+        operationId = "projectsProjectBlueprintUuidDaysDelete",
+        summary = "Unlink a day from a project blueprint",
+        description = "Unlink day from project (admin only)",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Project updated successfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Invalid request parameters", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Resource not found", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Server error", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
-            })
+            @ApiResponse(responseCode = "204", description = "No Content")
         },
         security = {
-            @SecurityRequirement(name = "bearerAuth")
+            @SecurityRequirement(name = "admin_jwt")
         }
     )
     @RequestMapping(
-        method = RequestMethod.PUT,
-        value = "/projects/{projectUUID}",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+        method = RequestMethod.DELETE,
+        value = "/projects/{project_blueprint_uuid}/days"
     )
     
-    default ResponseEntity<Project> updateProject(
-        @Parameter(name = "projectUUID", description = "Unique project identifier", required = true, in = ParameterIn.PATH) @PathVariable("projectUUID") UUID projectUUID,
-        @Parameter(name = "ProjectUpdate", description = "", required = true) @Valid @RequestBody ProjectUpdate projectUpdate
+    default ResponseEntity<Void> projectsProjectBlueprintUuidDaysDelete(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
+        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /projects/{project_blueprint_uuid}/days : Get days linked to a project blueprint
+     * Get linked days (paginated)
+     *
+     * @param projectBlueprintUuid The UUID of the project blueprint (required)
+     * @param limit Maximum number of items to return (optional)
+     * @param offset Number of items to skip before starting to collect the result set (optional)
+     * @return A list of ProjectDaysMapper (status code 200)
+     */
+    @Operation(
+        operationId = "projectsProjectBlueprintUuidDaysGet",
+        summary = "Get days linked to a project blueprint",
+        description = "Get linked days (paginated)",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "A list of ProjectDaysMapper", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectDaysMapper.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/projects/{project_blueprint_uuid}/days",
+        produces = { "application/json" }
+    )
+    
+    default ResponseEntity<List<ProjectDaysMapper>> projectsProjectBlueprintUuidDaysGet(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
+        @Parameter(name = "limit", description = "Maximum number of items to return", in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = false) Integer limit,
+        @Parameter(name = "offset", description = "Number of items to skip before starting to collect the result set", in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = false) Integer offset
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"ownerUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"name\" : \"Q4 Marketing Campaign\", \"description\" : \"Year-end marketing push\", \"projectUUID\" : \"550e8400-e29b-41d4-a716-446655440000\", \"status\" : \"in_progress\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "[ { \"project_blueprint\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"day\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"order\" : 0 }, { \"project_blueprint\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"day\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"order\" : 0 } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /projects/{project_blueprint_uuid}/days : Link a day to a project blueprint
+     * Link day to project (admin only)
+     *
+     * @param projectBlueprintUuid The UUID of the project blueprint (required)
+     * @param dayBlueprintUuid The UUID of the day blueprint (required)
+     * @param order Order or position (general integer query usage) (required)
+     * @return Linked day (status code 200)
+     */
+    @Operation(
+        operationId = "projectsProjectBlueprintUuidDaysPost",
+        summary = "Link a day to a project blueprint",
+        description = "Link day to project (admin only)",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Linked day", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDaysMapper.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "admin_jwt")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/projects/{project_blueprint_uuid}/days",
+        produces = { "application/json" }
+    )
+    
+    default ResponseEntity<ProjectDaysMapper> projectsProjectBlueprintUuidDaysPost(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
+        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
+        @NotNull @Parameter(name = "order", description = "Order or position (general integer query usage)", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "order", required = true) Integer order
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
+                    String exampleString = "{ \"project_blueprint\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"day\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"order\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * DELETE /projects/{project_blueprint_uuid} : Delete a project blueprint
+     * Delete project blueprint (admin only)
+     *
+     * @param projectBlueprintUuid The UUID of the project blueprint (required)
+     * @return No Content (status code 204)
+     */
+    @Operation(
+        operationId = "projectsProjectBlueprintUuidDelete",
+        summary = "Delete a project blueprint",
+        description = "Delete project blueprint (admin only)",
+        responses = {
+            @ApiResponse(responseCode = "204", description = "No Content")
+        },
+        security = {
+            @SecurityRequirement(name = "admin_jwt")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/projects/{project_blueprint_uuid}"
+    )
+    
+    default ResponseEntity<Void> projectsProjectBlueprintUuidDelete(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /projects/{project_blueprint_uuid} : Get project blueprint details
+     * Returns a specific project blueprint
+     *
+     * @param projectBlueprintUuid The UUID of the project blueprint (required)
+     * @return Project blueprint (status code 200)
+     */
+    @Operation(
+        operationId = "projectsProjectBlueprintUuidGet",
+        summary = "Get project blueprint details",
+        description = "Returns a specific project blueprint",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Project blueprint", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/projects/{project_blueprint_uuid}",
+        produces = { "application/json" }
+    )
+    
+    default ResponseEntity<ProjectBlueprint> projectsProjectBlueprintUuidGet(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
+                    String exampleString = "{ \"difficulty\" : \"easy\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"dyi\", \"title\" : \"title\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /projects/{project_blueprint_uuid} : Update an existing project blueprint
+     * Update project blueprint (admin only)
+     *
+     * @param projectBlueprintUuid The UUID of the project blueprint (required)
+     * @param projectBlueprint  (required)
+     * @return Updated project blueprint (status code 200)
+     */
+    @Operation(
+        operationId = "projectsProjectBlueprintUuidPut",
+        summary = "Update an existing project blueprint",
+        description = "Update project blueprint (admin only)",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Updated project blueprint", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "admin_jwt")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/projects/{project_blueprint_uuid}",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    
+    default ResponseEntity<ProjectBlueprint> projectsProjectBlueprintUuidPut(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
+        @Parameter(name = "ProjectBlueprint", description = "", required = true) @Valid @RequestBody ProjectBlueprint projectBlueprint
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 404, \"message\" : \"Resource not found\" }";
+                    String exampleString = "{ \"difficulty\" : \"easy\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"dyi\", \"title\" : \"title\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

@@ -1,6 +1,5 @@
 package pm.little.api.controllers;
 
-import pm.little.api.models.Error;
 import pm.little.api.models.Project;
 import pm.little.api.models.ProjectBlueprint;
 import pm.little.api.models.ProjectUpdate;

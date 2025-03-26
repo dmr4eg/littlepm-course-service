@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
 @ComponentScan(
-    basePackages = {"pm.little.api", "pm.little.api.controllers" , "pm.little.api.confs", "pm.little.service"},
+    basePackages = {"pm.little.api", "pm.little.api.controllers" , "pm.little.api.confs", "pm.little.courseservice"},
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
 

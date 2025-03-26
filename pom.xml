@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pm.little</groupId>
-    <artifactId>project-config-service</artifactId>
+    <artifactId>course-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>project-config-service</name>
     <description>project-config-service</description>

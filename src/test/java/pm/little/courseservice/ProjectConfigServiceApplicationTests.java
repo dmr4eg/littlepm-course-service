@@ -1,4 +1,4 @@
-package pm.little.service;
+package pm.little.courseservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

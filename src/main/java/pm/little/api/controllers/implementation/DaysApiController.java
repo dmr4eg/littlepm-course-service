@@ -1,7 +1,7 @@
 package pm.little.api.controllers.implementation;
 
 import jakarta.annotation.Generated;
-import pm.little.api.controllers.ProjectsApi;
+import pm.little.api.controllers.DaysApi;
 
 
 
@@ -17,12 +17,12 @@ import java.util.Optional;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Controller
 @RequestMapping("${openapi.projectDay.base-path:}")
-public class ProjectsApiController implements ProjectsApi {
+public class DaysApiController implements DaysApi {
 
     private final NativeWebRequest request;
 
     @Autowired
-    public ProjectsApiController(NativeWebRequest request) {
+    public DaysApiController(NativeWebRequest request) {
         this.request = request;
     }
 
