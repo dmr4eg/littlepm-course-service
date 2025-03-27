@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum StyleEnum {
-    DYI("dyi"),
+    DIY("DIY"),
 
-    READY_MADE("ready_made");
+    READY_MADE("READY-MADE");
 
     private String value;
 

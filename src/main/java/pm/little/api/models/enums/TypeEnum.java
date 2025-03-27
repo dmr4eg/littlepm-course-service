@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum TypeEnum {
-    TASK_BLUEPRINT("task_blueprint"),
+    TASK("TASK"),
 
-    FORM_BLUEPRINT("form_blueprint"),
+    FORM("FORM"),
 
-    MEDIA("media");
+    MEDIA("MEDIA");
 
     private String value;
 

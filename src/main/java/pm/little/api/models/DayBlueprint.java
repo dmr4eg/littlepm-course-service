@@ -16,29 +16,41 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
 import java.util.*;
 
-
 /**
  * DayBlueprint
  */
+
 @Entity
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class DayBlueprint {
+
   @Id
   @NotNull
   @GeneratedValue(strategy = GenerationType.UUID)
-  private @Nullable UUID dayBlueprintUuid;
+  private UUID dayBlueprintUuid;
 
-  private @Nullable String title;
+  private String title;
 
   private @Nullable String description;
 
   private @Nullable String text;
+
+  public DayBlueprint() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public DayBlueprint(UUID dayBlueprintUuid, String title) {
+    this.dayBlueprintUuid = dayBlueprintUuid;
+    this.title = title;
+  }
 
   public DayBlueprint dayBlueprintUuid(UUID dayBlueprintUuid) {
     this.dayBlueprintUuid = dayBlueprintUuid;
@@ -46,11 +58,12 @@ public class DayBlueprint {
   }
 
   /**
-   * Get dayBlueprintUuid
+   * UUID for a Day Blueprint
    * @return dayBlueprintUuid
    */
+  @NotNull
   @Valid
-  @Schema(name = "day_blueprint_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "day_blueprint_uuid", description = "UUID for a Day Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("day_blueprint_uuid")
   public UUID getDayBlueprintUuid() {
     return dayBlueprintUuid;
@@ -69,8 +82,8 @@ public class DayBlueprint {
    * Get title
    * @return title
    */
-  
-  @Schema(name = "title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "title", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("title")
   public String getTitle() {
     return title;

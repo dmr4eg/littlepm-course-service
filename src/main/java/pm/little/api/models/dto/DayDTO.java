@@ -4,23 +4,37 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
-import org.springframework.lang.Nullable;
+import jakarta.validation.constraints.NotNull;
 import pm.little.api.models.DayBlueprint;
 import pm.little.api.models.DayInstance;
 
+
 import io.swagger.v3.oas.annotations.media.Schema;
+
 
 
 /**
  * DayDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class DayDTO {
 
-  private @Nullable DayBlueprint blueprint;
+  private DayBlueprint blueprint;
 
-  private @Nullable DayInstance instance;
+  private DayInstance instance;
+
+  public DayDTO() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public DayDTO(DayBlueprint blueprint, DayInstance instance) {
+    this.blueprint = blueprint;
+    this.instance = instance;
+  }
 
   public DayDTO blueprint(DayBlueprint blueprint) {
     this.blueprint = blueprint;
@@ -31,8 +45,9 @@ public class DayDTO {
    * Get blueprint
    * @return blueprint
    */
+  @NotNull
   @Valid
-  @Schema(name = "blueprint", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("blueprint")
   public DayBlueprint getBlueprint() {
     return blueprint;
@@ -51,8 +66,8 @@ public class DayDTO {
    * Get instance
    * @return instance
    */
-  @Valid 
-  @Schema(name = "instance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "instance", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("instance")
   public DayInstance getInstance() {
     return instance;

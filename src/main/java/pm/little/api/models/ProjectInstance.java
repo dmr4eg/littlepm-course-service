@@ -1,42 +1,40 @@
 package pm.little.api.models;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 import jakarta.annotation.Generated;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
+import pm.little.api.models.ids.ProjectInstanceId;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import pm.little.api.models.enums.StatusEnum;
 
 
-import java.util.*;
-
-
 /**
- * ProjectInstance
+ * Entity for a user&#39;s specific project instance
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Entity
+@Schema(name = "ProjectInstance", description = "Entity for a user's specific project instance")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class ProjectInstance {
-
-  private @Nullable UUID projectBlueprintUuid;
-
-  private @Nullable UUID userUuid;
+  @EmbeddedId
+  @NotNull
+  private ProjectInstanceId id;
 
   /**
    * Gets or Sets status
    */
 
-  private @Nullable StatusEnum status;
+  private StatusEnum status;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime startDate;
@@ -48,44 +46,36 @@ public class ProjectInstance {
 
   private @Nullable String whatWentWell;
 
-  public ProjectInstance projectBlueprintUuid(UUID projectBlueprintUuid) {
-    this.projectBlueprintUuid = projectBlueprintUuid;
+  public ProjectInstance() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public ProjectInstance(ProjectInstanceId id, StatusEnum status) {
+    this.id = id;
+    this.status = status;
+  }
+
+  public ProjectInstance id(ProjectInstanceId id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * Get projectBlueprintUuid
-   * @return projectBlueprintUuid
+   * Get id
+   * @return id
    */
-  @Valid
-  @Schema(name = "project_blueprint_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("project_blueprint_uuid")
-  public UUID getProjectBlueprintUuid() {
-    return projectBlueprintUuid;
+  @NotNull @Valid
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
+  public ProjectInstanceId getId() {
+    return id;
   }
 
-  public void setProjectBlueprintUuid(UUID projectBlueprintUuid) {
-    this.projectBlueprintUuid = projectBlueprintUuid;
-  }
-
-  public ProjectInstance userUuid(UUID userUuid) {
-    this.userUuid = userUuid;
-    return this;
-  }
-
-  /**
-   * Get userUuid
-   * @return userUuid
-   */
-  @Valid 
-  @Schema(name = "user_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("user_uuid")
-  public UUID getUserUuid() {
-    return userUuid;
-  }
-
-  public void setUserUuid(UUID userUuid) {
-    this.userUuid = userUuid;
+  public void setId(ProjectInstanceId id) {
+    this.id = id;
   }
 
   public ProjectInstance status(StatusEnum status) {
@@ -97,8 +87,8 @@ public class ProjectInstance {
    * Get status
    * @return status
    */
-  
-  @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public StatusEnum getStatus() {
     return status;
@@ -197,8 +187,7 @@ public class ProjectInstance {
       return false;
     }
     ProjectInstance projectInstance = (ProjectInstance) o;
-    return Objects.equals(this.projectBlueprintUuid, projectInstance.projectBlueprintUuid) &&
-        Objects.equals(this.userUuid, projectInstance.userUuid) &&
+    return Objects.equals(this.id, projectInstance.id) &&
         Objects.equals(this.status, projectInstance.status) &&
         Objects.equals(this.startDate, projectInstance.startDate) &&
         Objects.equals(this.endDate, projectInstance.endDate) &&
@@ -208,15 +197,14 @@ public class ProjectInstance {
 
   @Override
   public int hashCode() {
-    return Objects.hash(projectBlueprintUuid, userUuid, status, startDate, endDate, feedback, whatWentWell);
+    return Objects.hash(id, status, startDate, endDate, feedback, whatWentWell);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ProjectInstance {\n");
-    sb.append("    projectBlueprintUuid: ").append(toIndentedString(projectBlueprintUuid)).append("\n");
-    sb.append("    userUuid: ").append(toIndentedString(userUuid)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
     sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");

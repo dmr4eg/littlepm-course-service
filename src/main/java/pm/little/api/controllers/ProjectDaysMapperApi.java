@@ -8,7 +8,7 @@ package pm.little.api.controllers;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import pm.little.api.models.ProjectBlueprint;
+import pm.little.api.models.ProjectDaysMapper;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,43 +36,43 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "projects", description = "the projects API")
-public interface ProjectsApi {
+@Tag(name = "project-days-mapper", description = "the project-days-mapper API")
+public interface ProjectDaysMapperApi {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
 
     /**
-     * GET /projects : List project blueprints
+     * GET /project-days-mapper : List all project-day mappings
      *
      * @param limit Limit of the list (required)
      * @param offset Offset of the list (required)
-     * @return A list of project blueprints (status code 200)
+     * @return A list of ProjectDaysMapper (status code 200)
      */
     @Operation(
-        operationId = "projectsGet",
-        summary = "List project blueprints",
+        operationId = "projectDaysMapperGet",
+        summary = "List all project-day mappings",
         responses = {
-            @ApiResponse(responseCode = "200", description = "A list of project blueprints", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectBlueprint.class)))
+            @ApiResponse(responseCode = "200", description = "A list of ProjectDaysMapper", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectDaysMapper.class)))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/projects",
+        value = "/project-days-mapper",
         produces = { "application/json" }
     )
     
-    default ResponseEntity<List<ProjectBlueprint>> projectsGet(
+    default ResponseEntity<List<ProjectDaysMapper>> projectDaysMapperGet(
         @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
         @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }, { \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" } ]";
+                    String exampleString = "[ { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }, { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -85,17 +84,17 @@ public interface ProjectsApi {
 
 
     /**
-     * POST /projects : Create new project blueprint (admin only)
+     * POST /project-days-mapper : Create a new project-day mapping (admin only)
      *
-     * @param projectBlueprint  (required)
-     * @return The created project blueprint (status code 200)
+     * @param projectDaysMapper  (required)
+     * @return Created project-day mapping (status code 200)
      */
     @Operation(
-        operationId = "projectsPost",
-        summary = "Create new project blueprint (admin only)",
+        operationId = "projectDaysMapperPost",
+        summary = "Create a new project-day mapping (admin only)",
         responses = {
-            @ApiResponse(responseCode = "200", description = "The created project blueprint", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
+            @ApiResponse(responseCode = "200", description = "Created project-day mapping", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDaysMapper.class))
             })
         },
         security = {
@@ -104,18 +103,18 @@ public interface ProjectsApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/projects",
+        value = "/project-days-mapper",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<ProjectBlueprint> projectsPost(
-        @Parameter(name = "ProjectBlueprint", description = "", required = true) @Valid @RequestBody ProjectBlueprint projectBlueprint
+    default ResponseEntity<ProjectDaysMapper> projectDaysMapperPost(
+        @Parameter(name = "ProjectDaysMapper", description = "", required = true) @Valid @RequestBody ProjectDaysMapper projectDaysMapper
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -127,14 +126,15 @@ public interface ProjectsApi {
 
 
     /**
-     * DELETE /projects/{project_blueprint_uuid} : Delete a project blueprint (admin only)
+     * DELETE /project-days-mapper/{project_blueprint_uuid}/{day_blueprint_uuid} : Delete project-day mapping (admin only)
      *
      * @param projectBlueprintUuid The UUID of the project blueprint (required)
+     * @param dayBlueprintUuid The UUID of the day blueprint (required)
      * @return No Content (status code 204)
      */
     @Operation(
-        operationId = "projectsProjectBlueprintUuidDelete",
-        summary = "Delete a project blueprint (admin only)",
+        operationId = "projectDaysMapperProjectBlueprintUuidDayBlueprintUuidDelete",
+        summary = "Delete project-day mapping (admin only)",
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -144,11 +144,12 @@ public interface ProjectsApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/projects/{project_blueprint_uuid}"
+        value = "/project-days-mapper/{project_blueprint_uuid}/{day_blueprint_uuid}"
     )
     
-    default ResponseEntity<Void> projectsProjectBlueprintUuidDelete(
-        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid
+    default ResponseEntity<Void> projectDaysMapperProjectBlueprintUuidDayBlueprintUuidDelete(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
+        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
@@ -156,33 +157,35 @@ public interface ProjectsApi {
 
 
     /**
-     * GET /projects/{project_blueprint_uuid} : Get project blueprint details
+     * GET /project-days-mapper/{project_blueprint_uuid}/{day_blueprint_uuid} : Get a specific project-day mapping
      *
      * @param projectBlueprintUuid The UUID of the project blueprint (required)
-     * @return Project blueprint (status code 200)
+     * @param dayBlueprintUuid The UUID of the day blueprint (required)
+     * @return A single ProjectDaysMapper (status code 200)
      */
     @Operation(
-        operationId = "projectsProjectBlueprintUuidGet",
-        summary = "Get project blueprint details",
+        operationId = "projectDaysMapperProjectBlueprintUuidDayBlueprintUuidGet",
+        summary = "Get a specific project-day mapping",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Project blueprint", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
+            @ApiResponse(responseCode = "200", description = "A single ProjectDaysMapper", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDaysMapper.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/projects/{project_blueprint_uuid}",
+        value = "/project-days-mapper/{project_blueprint_uuid}/{day_blueprint_uuid}",
         produces = { "application/json" }
     )
     
-    default ResponseEntity<ProjectBlueprint> projectsProjectBlueprintUuidGet(
-        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid
+    default ResponseEntity<ProjectDaysMapper> projectDaysMapperProjectBlueprintUuidDayBlueprintUuidGet(
+        @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
+        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -194,18 +197,19 @@ public interface ProjectsApi {
 
 
     /**
-     * PUT /projects/{project_blueprint_uuid} : Update an existing project blueprint (admin only)
+     * PUT /project-days-mapper/{project_blueprint_uuid}/{day_blueprint_uuid} : Update a specific project-day mapping (admin only)
      *
      * @param projectBlueprintUuid The UUID of the project blueprint (required)
-     * @param projectBlueprint  (required)
-     * @return Updated project blueprint (status code 200)
+     * @param dayBlueprintUuid The UUID of the day blueprint (required)
+     * @param projectDaysMapper  (required)
+     * @return Updated mapping (status code 200)
      */
     @Operation(
-        operationId = "projectsProjectBlueprintUuidPut",
-        summary = "Update an existing project blueprint (admin only)",
+        operationId = "projectDaysMapperProjectBlueprintUuidDayBlueprintUuidPut",
+        summary = "Update a specific project-day mapping (admin only)",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Updated project blueprint", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
+            @ApiResponse(responseCode = "200", description = "Updated mapping", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDaysMapper.class))
             })
         },
         security = {
@@ -214,19 +218,20 @@ public interface ProjectsApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/projects/{project_blueprint_uuid}",
+        value = "/project-days-mapper/{project_blueprint_uuid}/{day_blueprint_uuid}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<ProjectBlueprint> projectsProjectBlueprintUuidPut(
+    default ResponseEntity<ProjectDaysMapper> projectDaysMapperProjectBlueprintUuidDayBlueprintUuidPut(
         @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
-        @Parameter(name = "ProjectBlueprint", description = "", required = true) @Valid @RequestBody ProjectBlueprint projectBlueprint
+        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
+        @Parameter(name = "ProjectDaysMapper", description = "", required = true) @Valid @RequestBody ProjectDaysMapper projectDaysMapper
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

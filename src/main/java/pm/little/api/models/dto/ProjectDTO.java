@@ -4,22 +4,37 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
-import org.springframework.lang.Nullable;
+import jakarta.validation.constraints.NotNull;
 import pm.little.api.models.ProjectBlueprint;
 import pm.little.api.models.ProjectInstance;
+
+
 import io.swagger.v3.oas.annotations.media.Schema;
+
 
 
 /**
  * ProjectDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class ProjectDTO {
 
-  private @Nullable ProjectBlueprint blueprint;
+  private ProjectBlueprint blueprint;
 
-  private @Nullable ProjectInstance instance;
+  private ProjectInstance instance;
+
+  public ProjectDTO() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public ProjectDTO(ProjectBlueprint blueprint, ProjectInstance instance) {
+    this.blueprint = blueprint;
+    this.instance = instance;
+  }
 
   public ProjectDTO blueprint(ProjectBlueprint blueprint) {
     this.blueprint = blueprint;
@@ -30,8 +45,9 @@ public class ProjectDTO {
    * Get blueprint
    * @return blueprint
    */
+  @NotNull
   @Valid
-  @Schema(name = "blueprint", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("blueprint")
   public ProjectBlueprint getBlueprint() {
     return blueprint;
@@ -50,8 +66,8 @@ public class ProjectDTO {
    * Get instance
    * @return instance
    */
-  @Valid 
-  @Schema(name = "instance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "instance", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("instance")
   public ProjectInstance getInstance() {
     return instance;

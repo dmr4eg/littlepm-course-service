@@ -1,74 +1,60 @@
 package pm.little.api.models;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.UUID;
-
 import jakarta.annotation.Generated;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import jakarta.validation.constraints.NotNull;
+import pm.little.api.models.ids.ProjectDaysMapperId;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
-import java.util.*;
-
-
 /**
- * ProjectDaysMapper
+ * Entity for mapping days within a project
  */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Entity
+@Schema(name = "ProjectDaysMapper", description = "Entity for mapping days within a project")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class ProjectDaysMapper {
+  @EmbeddedId
+  @NotNull
+  private ProjectDaysMapperId id;
 
-  private @Nullable UUID projectBlueprint;
+  private Integer order;
 
-  private @Nullable UUID day;
+  public ProjectDaysMapper() {
+    super();
+  }
 
-  private @Nullable Integer order;
+  /**
+   * Constructor with only required parameters
+   */
+  public ProjectDaysMapper(ProjectDaysMapperId id, Integer order) {
+    this.id = id;
+    this.order = order;
+  }
 
-  public ProjectDaysMapper projectBlueprint(UUID projectBlueprint) {
-    this.projectBlueprint = projectBlueprint;
+  public ProjectDaysMapper id(ProjectDaysMapperId id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * UUID referencing a ProjectBlueprint
-   * @return projectBlueprint
+   * Get id
+   * @return id
    */
-  @Valid
-  @Schema(name = "project_blueprint", description = "UUID referencing a ProjectBlueprint", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("project_blueprint")
-  public UUID getProjectBlueprint() {
-    return projectBlueprint;
+  @NotNull @Valid
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
+  public ProjectDaysMapperId getId() {
+    return id;
   }
 
-  public void setProjectBlueprint(UUID projectBlueprint) {
-    this.projectBlueprint = projectBlueprint;
-  }
-
-  public ProjectDaysMapper day(UUID day) {
-    this.day = day;
-    return this;
-  }
-
-  /**
-   * UUID referencing a DayBlueprint
-   * @return day
-   */
-  @Valid 
-  @Schema(name = "day", description = "UUID referencing a DayBlueprint", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("day")
-  public UUID getDay() {
-    return day;
-  }
-
-  public void setDay(UUID day) {
-    this.day = day;
+  public void setId(ProjectDaysMapperId id) {
+    this.id = id;
   }
 
   public ProjectDaysMapper order(Integer order) {
@@ -77,11 +63,11 @@ public class ProjectDaysMapper {
   }
 
   /**
-   * The order of the day in the project
+   * Order or position within a list
    * @return order
    */
-  
-  @Schema(name = "order", description = "The order of the day in the project", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "order", description = "Order or position within a list", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("order")
   public Integer getOrder() {
     return order;
@@ -100,22 +86,20 @@ public class ProjectDaysMapper {
       return false;
     }
     ProjectDaysMapper projectDaysMapper = (ProjectDaysMapper) o;
-    return Objects.equals(this.projectBlueprint, projectDaysMapper.projectBlueprint) &&
-        Objects.equals(this.day, projectDaysMapper.day) &&
+    return Objects.equals(this.id, projectDaysMapper.id) &&
         Objects.equals(this.order, projectDaysMapper.order);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(projectBlueprint, day, order);
+    return Objects.hash(id, order);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ProjectDaysMapper {\n");
-    sb.append("    projectBlueprint: ").append(toIndentedString(projectBlueprint)).append("\n");
-    sb.append("    day: ").append(toIndentedString(day)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    order: ").append(toIndentedString(order)).append("\n");
     sb.append("}");
     return sb.toString();

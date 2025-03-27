@@ -1,74 +1,61 @@
 package pm.little.api.models;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.UUID;
-
 import jakarta.annotation.Generated;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import jakarta.validation.constraints.NotNull;
+import pm.little.api.models.ids.MembersId;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
-import java.util.*;
-
-
 /**
- * Members
+ * Entity for user membership in a specific project
  */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Entity
+@Schema(name = "Members", description = "Entity for user membership in a specific project")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class Members {
+  @EmbeddedId
+  @NotNull
+  private MembersId id;
 
-  private @Nullable UUID projectBlueprintUuid;
+  private String memberName;
 
-  private @Nullable UUID userUuid;
+  public Members() {
+    super();
+  }
 
-  private @Nullable String memberName;
+  /**
+   * Constructor with only required parameters
+   */
+  public Members(MembersId id, String memberName) {
+    this.id = id;
+    this.memberName = memberName;
+  }
 
-  public Members projectBlueprintUuid(UUID projectBlueprintUuid) {
-    this.projectBlueprintUuid = projectBlueprintUuid;
+  public Members id(MembersId id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * Get projectBlueprintUuid
-   * @return projectBlueprintUuid
+   * Get id
+   * @return id
    */
+  @NotNull
   @Valid
-  @Schema(name = "project_blueprint_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("project_blueprint_uuid")
-  public UUID getProjectBlueprintUuid() {
-    return projectBlueprintUuid;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
+  public MembersId getId() {
+    return id;
   }
 
-  public void setProjectBlueprintUuid(UUID projectBlueprintUuid) {
-    this.projectBlueprintUuid = projectBlueprintUuid;
-  }
-
-  public Members userUuid(UUID userUuid) {
-    this.userUuid = userUuid;
-    return this;
-  }
-
-  /**
-   * Get userUuid
-   * @return userUuid
-   */
-  @Valid 
-  @Schema(name = "user_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("user_uuid")
-  public UUID getUserUuid() {
-    return userUuid;
-  }
-
-  public void setUserUuid(UUID userUuid) {
-    this.userUuid = userUuid;
+  public void setId(MembersId id) {
+    this.id = id;
   }
 
   public Members memberName(String memberName) {
@@ -80,8 +67,8 @@ public class Members {
    * Get memberName
    * @return memberName
    */
-  
-  @Schema(name = "member_name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "member_name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("member_name")
   public String getMemberName() {
     return memberName;
@@ -100,22 +87,20 @@ public class Members {
       return false;
     }
     Members members = (Members) o;
-    return Objects.equals(this.projectBlueprintUuid, members.projectBlueprintUuid) &&
-        Objects.equals(this.userUuid, members.userUuid) &&
+    return Objects.equals(this.id, members.id) &&
         Objects.equals(this.memberName, members.memberName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(projectBlueprintUuid, userUuid, memberName);
+    return Objects.hash(id, memberName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Members {\n");
-    sb.append("    projectBlueprintUuid: ").append(toIndentedString(projectBlueprintUuid)).append("\n");
-    sb.append("    userUuid: ").append(toIndentedString(userUuid)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    memberName: ").append(toIndentedString(memberName)).append("\n");
     sb.append("}");
     return sb.toString();

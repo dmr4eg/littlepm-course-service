@@ -8,7 +8,7 @@ package pm.little.api.controllers;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import pm.little.api.models.DayBlueprint;
+import pm.little.api.models.DayComponentsMapper;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,22 +36,23 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "days", description = "the days API")
-public interface DaysApi {
+@Tag(name = "day-components-mapper", description = "the day-components-mapper API")
+public interface DayComponentsMapperApi {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
 
     /**
-     * DELETE /days/{day_blueprint_uuid} : Delete day template (admin only)
+     * DELETE /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Delete day-component mapping (admin only)
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
+     * @param dayComponentUuid Component UUID in the path (required)
      * @return No Content (status code 204)
      */
     @Operation(
-        operationId = "daysDayBlueprintUuidDelete",
-        summary = "Delete day template (admin only)",
+        operationId = "dayComponentsMapperDayBlueprintUuidDayComponentUuidDelete",
+        summary = "Delete day-component mapping (admin only)",
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -61,11 +62,12 @@ public interface DaysApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/days/{day_blueprint_uuid}"
+        value = "/day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}"
     )
     
-    default ResponseEntity<Void> daysDayBlueprintUuidDelete(
-        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid
+    default ResponseEntity<Void> dayComponentsMapperDayBlueprintUuidDayComponentUuidDelete(
+        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
+        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID dayComponentUuid
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
@@ -73,33 +75,35 @@ public interface DaysApi {
 
 
     /**
-     * GET /days/{day_blueprint_uuid} : Get day template details
+     * GET /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Get a specific day-component mapping
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
-     * @return Day blueprint (status code 200)
+     * @param dayComponentUuid Component UUID in the path (required)
+     * @return DayComponentsMapper (status code 200)
      */
     @Operation(
-        operationId = "daysDayBlueprintUuidGet",
-        summary = "Get day template details",
+        operationId = "dayComponentsMapperDayBlueprintUuidDayComponentUuidGet",
+        summary = "Get a specific day-component mapping",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Day blueprint", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = DayBlueprint.class))
+            @ApiResponse(responseCode = "200", description = "DayComponentsMapper", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = DayComponentsMapper.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/days/{day_blueprint_uuid}",
+        value = "/day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}",
         produces = { "application/json" }
     )
     
-    default ResponseEntity<DayBlueprint> daysDayBlueprintUuidGet(
-        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid
+    default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidDayComponentUuidGet(
+        @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
+        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID dayComponentUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }";
+                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -111,18 +115,19 @@ public interface DaysApi {
 
 
     /**
-     * PUT /days/{day_blueprint_uuid} : Update day template (admin only)
+     * PUT /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Update a day-component mapping (admin only)
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
-     * @param dayBlueprint  (required)
-     * @return Updated day blueprint (status code 200)
+     * @param dayComponentUuid Component UUID in the path (required)
+     * @param dayComponentsMapper  (required)
+     * @return Updated mapping (status code 200)
      */
     @Operation(
-        operationId = "daysDayBlueprintUuidPut",
-        summary = "Update day template (admin only)",
+        operationId = "dayComponentsMapperDayBlueprintUuidDayComponentUuidPut",
+        summary = "Update a day-component mapping (admin only)",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Updated day blueprint", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = DayBlueprint.class))
+            @ApiResponse(responseCode = "200", description = "Updated mapping", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = DayComponentsMapper.class))
             })
         },
         security = {
@@ -131,19 +136,20 @@ public interface DaysApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/days/{day_blueprint_uuid}",
+        value = "/day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<DayBlueprint> daysDayBlueprintUuidPut(
+    default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidDayComponentUuidPut(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
-        @Parameter(name = "DayBlueprint", description = "", required = true) @Valid @RequestBody DayBlueprint dayBlueprint
+        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID dayComponentUuid,
+        @Parameter(name = "DayComponentsMapper", description = "", required = true) @Valid @RequestBody DayComponentsMapper dayComponentsMapper
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }";
+                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -155,35 +161,35 @@ public interface DaysApi {
 
 
     /**
-     * GET /days : List day templates
+     * GET /day-components-mapper : List all day-component mappings
      *
      * @param limit Limit of the list (required)
      * @param offset Offset of the list (required)
-     * @return A list of day blueprints (status code 200)
+     * @return A list of DayComponentsMapper (status code 200)
      */
     @Operation(
-        operationId = "daysGet",
-        summary = "List day templates",
+        operationId = "dayComponentsMapperGet",
+        summary = "List all day-component mappings",
         responses = {
-            @ApiResponse(responseCode = "200", description = "A list of day blueprints", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DayBlueprint.class)))
+            @ApiResponse(responseCode = "200", description = "A list of DayComponentsMapper", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DayComponentsMapper.class)))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/days",
+        value = "/day-components-mapper",
         produces = { "application/json" }
     )
     
-    default ResponseEntity<List<DayBlueprint>> daysGet(
+    default ResponseEntity<List<DayComponentsMapper>> dayComponentsMapperGet(
         @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
         @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }, { \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" } ]";
+                    String exampleString = "[ { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }, { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -195,17 +201,17 @@ public interface DaysApi {
 
 
     /**
-     * POST /days : Create day template (admin only)
+     * POST /day-components-mapper : Create a new day-component mapping (admin only)
      *
-     * @param dayBlueprint  (required)
-     * @return Created day blueprint (status code 200)
+     * @param dayComponentsMapper  (required)
+     * @return Created day-component mapping (status code 200)
      */
     @Operation(
-        operationId = "daysPost",
-        summary = "Create day template (admin only)",
+        operationId = "dayComponentsMapperPost",
+        summary = "Create a new day-component mapping (admin only)",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Created day blueprint", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = DayBlueprint.class))
+            @ApiResponse(responseCode = "200", description = "Created day-component mapping", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = DayComponentsMapper.class))
             })
         },
         security = {
@@ -214,18 +220,18 @@ public interface DaysApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/days",
+        value = "/day-components-mapper",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<DayBlueprint> daysPost(
-        @Parameter(name = "DayBlueprint", description = "", required = true) @Valid @RequestBody DayBlueprint dayBlueprint
+    default ResponseEntity<DayComponentsMapper> dayComponentsMapperPost(
+        @Parameter(name = "DayComponentsMapper", description = "", required = true) @Valid @RequestBody DayComponentsMapper dayComponentsMapper
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }";
+                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

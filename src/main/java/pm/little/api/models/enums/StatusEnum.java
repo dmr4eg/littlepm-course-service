@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum StatusEnum {
-    IN_PROGRESS("in_progress"),
+    IN_PROGRESS("IN_PROGRESS"),
 
-    COMPLETED("completed"),
-
-    NOT_STARTED("not_started");
+    COMPLETED("COMPLETED");
 
     private String value;
 

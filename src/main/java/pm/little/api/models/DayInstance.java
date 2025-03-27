@@ -1,86 +1,98 @@
 package pm.little.api.models;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.UUID;
-
 import jakarta.annotation.Generated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-
+import pm.little.api.models.ids.DayInstanceId;
 import io.swagger.v3.oas.annotations.media.Schema;
-import pm.little.api.models.enums.StatusEnum;
-
-
-import java.util.*;
-
 
 /**
- * DayInstance
+ * Specific instance of a day for a user
  */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-26T00:36:51.210059+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Entity
+@Schema(name = "DayInstance", description = "Specific instance of a day for a user")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class DayInstance {
-
-  private @Nullable UUID dayBlueprintUuid;
-
+  @EmbeddedId
   @NotNull
-  private @Nullable UUID userUuid;
+  private DayInstanceId id;
 
   /**
    * Gets or Sets status
    */
+  public enum StatusEnum {
+    IN_PROGRESS("IN_PROGRESS"),
+    
+    COMPLETED("COMPLETED"),
+    
+    NOT_STARTED("NOT_STARTED");
 
+    private String value;
 
-  private @Nullable StatusEnum status;
+    StatusEnum(String value) {
+      this.value = value;
+    }
 
-  public DayInstance dayBlueprintUuid(UUID dayBlueprintUuid) {
-    this.dayBlueprintUuid = dayBlueprintUuid;
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static StatusEnum fromValue(String value) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  private StatusEnum status;
+
+  public DayInstance() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public DayInstance(DayInstanceId id, StatusEnum status) {
+    this.id = id;
+    this.status = status;
+  }
+
+  public DayInstance id(DayInstanceId id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * Get dayBlueprintUuid
-   * @return dayBlueprintUuid
+   * Get id
+   * @return id
    */
+  @NotNull
   @Valid
-  @Schema(name = "day_blueprint_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("day_blueprint_uuid")
-  public UUID getDayBlueprintUuid() {
-    return dayBlueprintUuid;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
+  public DayInstanceId getId() {
+    return id;
   }
 
-  public void setDayBlueprintUuid(UUID dayBlueprintUuid) {
-    this.dayBlueprintUuid = dayBlueprintUuid;
-  }
-
-  public DayInstance userUuid(UUID userUuid) {
-    this.userUuid = userUuid;
-    return this;
-  }
-
-  /**
-   * Get userUuid
-   * @return userUuid
-   */
-  @Valid 
-  @Schema(name = "user_uuid", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("user_uuid")
-  public UUID getUserUuid() {
-    return userUuid;
-  }
-
-  public void setUserUuid(UUID userUuid) {
-    this.userUuid = userUuid;
+  public void setId(DayInstanceId id) {
+    this.id = id;
   }
 
   public DayInstance status(StatusEnum status) {
@@ -92,8 +104,8 @@ public class DayInstance {
    * Get status
    * @return status
    */
-  
-  @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public StatusEnum getStatus() {
     return status;
@@ -112,22 +124,20 @@ public class DayInstance {
       return false;
     }
     DayInstance dayInstance = (DayInstance) o;
-    return Objects.equals(this.dayBlueprintUuid, dayInstance.dayBlueprintUuid) &&
-        Objects.equals(this.userUuid, dayInstance.userUuid) &&
+    return Objects.equals(this.id, dayInstance.id) &&
         Objects.equals(this.status, dayInstance.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(dayBlueprintUuid, userUuid, status);
+    return Objects.hash(id, status);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DayInstance {\n");
-    sb.append("    dayBlueprintUuid: ").append(toIndentedString(dayBlueprintUuid)).append("\n");
-    sb.append("    userUuid: ").append(toIndentedString(userUuid)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();

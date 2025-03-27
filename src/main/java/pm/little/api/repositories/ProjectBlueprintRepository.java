@@ -5,6 +5,5 @@ import pm.little.api.models.ProjectBlueprint;
 
 import java.util.UUID;
 
-
 public interface ProjectBlueprintRepository extends JpaRepository<ProjectBlueprint, UUID> {
 }
