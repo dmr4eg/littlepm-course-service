@@ -9,6 +9,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import pm.little.api.models.enums.StatusEnum;
 import pm.little.api.models.ids.DayInstanceId;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -26,39 +27,7 @@ public class DayInstance {
   /**
    * Gets or Sets status
    */
-  public enum StatusEnum {
-    IN_PROGRESS("IN_PROGRESS"),
-    
-    COMPLETED("COMPLETED"),
-    
-    NOT_STARTED("NOT_STARTED");
 
-    private String value;
-
-    StatusEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static StatusEnum fromValue(String value) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
 
   private StatusEnum status;
 

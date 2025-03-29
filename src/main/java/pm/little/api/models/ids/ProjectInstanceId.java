@@ -4,17 +4,18 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
-
-import javax.annotation.Generated;
 
 /**
  * Composite ID for ProjectInstance
  */
 
+@Embeddable
 @Schema(name = "ProjectInstanceId", description = "Composite ID for ProjectInstance")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class ProjectInstanceId {
@@ -44,7 +45,7 @@ public class ProjectInstanceId {
    * UUID for a Project Blueprint
    * @return projectBlueprintUuid
    */
-  @NotNull @Valid 
+  @NotNull @Valid
   @Schema(name = "project_blueprint_uuid", description = "UUID for a Project Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("project_blueprint_uuid")
   public UUID getProjectBlueprintUuid() {
@@ -64,7 +65,8 @@ public class ProjectInstanceId {
    * UUID for a User
    * @return userUuid
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "user_uuid", description = "UUID for a User", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("user_uuid")
   public UUID getUserUuid() {
