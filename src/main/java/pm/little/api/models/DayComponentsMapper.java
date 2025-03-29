@@ -29,8 +29,19 @@ public class DayComponentsMapper {
    * Gets or Sets type
    */
 
-
+  @NotNull
   private TypeEnum type;
+
+  @NotNull
+  private Integer order;
+
+  public @NotNull Integer getOrder() {
+    return order;
+  }
+
+  public void setOrder(@NotNull Integer order) {
+    this.order = order;
+  }
 
   public DayComponentsMapper() {
     super();

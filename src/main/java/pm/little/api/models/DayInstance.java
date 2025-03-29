@@ -28,7 +28,7 @@ public class DayInstance {
    * Gets or Sets status
    */
 
-
+  @NotNull
   private StatusEnum status;
 
   public DayInstance() {

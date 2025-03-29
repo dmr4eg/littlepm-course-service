@@ -7,6 +7,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.PersistenceConstructor;
 import pm.little.api.models.ids.ProjectDaysMapperId;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +24,7 @@ public class ProjectDaysMapper {
   @NotNull
   private ProjectDaysMapperId id;
 
+  @NotNull
   private Integer order;
 
   public ProjectDaysMapper() {
@@ -32,6 +34,7 @@ public class ProjectDaysMapper {
   /**
    * Constructor with only required parameters
    */
+  @PersistenceConstructor
   public ProjectDaysMapper(ProjectDaysMapperId id, Integer order) {
     this.id = id;
     this.order = order;

@@ -38,6 +38,10 @@ public class ProjectServiceImpl implements ProjectService {
     // Project Blueprint Operations
     @Override
     public ProjectBlueprint createProjectBlueprint(ProjectBlueprint blueprint) {
+        ProjectBlueprint existing = projectBlueprintRepository.findById(blueprint.getProjectBlueprintUuid()).orElse(null);
+        if (existing != null) {
+            return existing;
+        }
         return projectBlueprintRepository.save(blueprint);
     }
 
@@ -49,12 +53,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectBlueprint getProjectBlueprint(UUID projectUuid) {
+        if (!projectBlueprintRepository.existsById(projectUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectUuid);
+        }
         return projectBlueprintRepository.findById(projectUuid)
                 .orElseThrow(() -> new ProjectBlueprintNotFoundException(projectUuid));
     }
 
     @Override
     public ProjectBlueprint updateProjectBlueprint(UUID projectUuid, ProjectBlueprint updated) {
+        if (!projectBlueprintRepository.existsById(projectUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectUuid);
+        }
         ProjectBlueprint existing = getProjectBlueprint(projectUuid);
         existing.setTitle(updated.getTitle());
         existing.setDescription(updated.getDescription());
@@ -67,18 +77,29 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteProjectBlueprint(UUID projectUuid) {
+        if (!projectBlueprintRepository.existsById(projectUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectUuid);
+        }
         projectBlueprintRepository.deleteById(projectUuid);
     }
 
-    // Project-Days Mapper Operations
+    // Project Days Mapper Operations
     @Override
-    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper mapping) {
+    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper mapping, int order) {
+        ProjectDaysMapper existing = projectDaysMapperRepository.findById(mapping.getId()).orElse(null);
+        if (existing != null) {
+            return existing;
+        }
+        mapping.setOrder(order);
         return projectDaysMapperRepository.save(mapping);
     }
 
     @Override
     public ProjectDaysMapper getProjectDayMapping(UUID projectUuid, UUID dayUuid) {
         ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+        if (!projectDaysMapperRepository.existsById(id)) {
+            throw new ProjectDayNotFoundException(id);
+        }
         return projectDaysMapperRepository.findById(id)
                 .orElseThrow(() -> new ProjectDayNotFoundException(id));
     }
@@ -90,7 +111,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public int getProjectDayMappingsOrder(UUID projectUuid, UUID dayUuid) {
+        ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+        if (!projectDaysMapperRepository.existsById(id)) {
+            throw new ProjectDayNotFoundException(id);
+        }
+        return projectDaysMapperRepository.findById(id)
+                .orElseThrow(() -> new ProjectDayNotFoundException(id))
+                .getOrder();
+    }
+
+    @Override
     public ProjectDaysMapper updateProjectDayMapping(UUID projectUuid, UUID dayUuid, ProjectDaysMapper updated) {
+        ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+        if (!projectDaysMapperRepository.existsById(id)) {
+            throw new ProjectDayNotFoundException(id);
+        }
         ProjectDaysMapper existing = getProjectDayMapping(projectUuid, dayUuid);
         existing.setOrder(updated.getOrder());
         return projectDaysMapperRepository.save(existing);
@@ -99,12 +135,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProjectDayMapping(UUID projectUuid, UUID dayUuid) {
         ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+        if (!projectDaysMapperRepository.existsById(id)) {
+            throw new ProjectDayNotFoundException(id);
+        }
         projectDaysMapperRepository.deleteById(id);
     }
 
     // Project Instance Operations
     @Override
     public ProjectInstance createProjectInstance(ProjectInstance instance) {
+        ProjectInstance existing = projectInstanceRepository.findById(instance.getId()).orElse(null);
+        if (existing != null && existing.getStatus() == StatusEnum.IN_PROGRESS) {
+            return existing;
+        }
         instance.setStatus(StatusEnum.IN_PROGRESS);
         return projectInstanceRepository.save(instance);
     }
@@ -112,6 +155,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectInstance getProjectInstance(UUID projectUuid, UUID userUuid) {
         ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+        if (!projectInstanceRepository.existsById(id)) {
+            throw new ProjectInstanceNotFoundException(id);
+        }
         return projectInstanceRepository.findById(id)
                 .orElseThrow(() -> new ProjectInstanceNotFoundException(id));
     }
@@ -124,6 +170,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectInstance updateProjectInstance(UUID projectUuid, UUID userUuid, ProjectInstance updated) {
+        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+        if (!projectInstanceRepository.existsById(id)) {
+            throw new ProjectInstanceNotFoundException(id);
+        }
         ProjectInstance existing = getProjectInstance(projectUuid, userUuid);
         existing.setStatus(updated.getStatus());
         existing.setStartDate(updated.getStartDate());
@@ -136,12 +186,22 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProjectInstance(UUID projectUuid, UUID userUuid) {
         ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+        if (!projectInstanceRepository.existsById(id)) {
+            throw new ProjectInstanceNotFoundException(id);
+        }
         projectInstanceRepository.deleteById(id);
     }
 
     // DTO Composition
     @Override
     public ProjectDTO getProjectDTO(UUID projectUuid, UUID userUuid) {
+        if (!projectBlueprintRepository.existsById(projectUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectUuid);
+        }
+        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+        if (!projectInstanceRepository.existsById(id)) {
+            throw new ProjectInstanceNotFoundException(id);
+        }
         ProjectBlueprint blueprint = getProjectBlueprint(projectUuid);
         ProjectInstance instance = getProjectInstance(projectUuid, userUuid);
         return new ProjectDTO(blueprint, instance);

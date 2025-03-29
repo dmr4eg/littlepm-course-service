@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -34,11 +35,11 @@ public class DayBlueprint {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID dayBlueprintUuid;
 
-  private String title;
+  private @NotNull String title;
 
   private @Nullable String description;
 
-  private @Nullable String text;
+  private @NotNull String text;
 
   public DayBlueprint() {
     super();
@@ -47,6 +48,7 @@ public class DayBlueprint {
   /**
    * Constructor with only required parameters
    */
+  @PersistenceConstructor
   public DayBlueprint(UUID dayBlueprintUuid, String title) {
     this.dayBlueprintUuid = dayBlueprintUuid;
     this.title = title;

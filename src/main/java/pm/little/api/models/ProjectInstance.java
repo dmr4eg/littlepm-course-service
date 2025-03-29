@@ -10,6 +10,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 import pm.little.api.models.ids.ProjectInstanceId;
@@ -34,6 +35,7 @@ public class ProjectInstance {
    * Gets or Sets status
    */
 
+  @NotNull
   private StatusEnum status;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -53,6 +55,7 @@ public class ProjectInstance {
   /**
    * Constructor with only required parameters
    */
+  @PersistenceConstructor
   public ProjectInstance(ProjectInstanceId id, StatusEnum status) {
     this.id = id;
     this.status = status;

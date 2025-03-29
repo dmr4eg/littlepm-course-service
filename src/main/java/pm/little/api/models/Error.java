@@ -23,6 +23,7 @@ import java.util.*;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class Error {
 
+  @NotNull
   private String message;
 
   public Error() {

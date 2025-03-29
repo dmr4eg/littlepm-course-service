@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -37,13 +38,17 @@ public class ProjectBlueprint {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID projectBlueprintUuid;
 
-  private @Nullable String posterUrl;
+  @NotNull
+  private String posterUrl;
 
-  private @Nullable String welcomeVideoUrl;
+  @NotNull
+  private String welcomeVideoUrl;
 
+  @NotNull
   private String title;
 
-  private @Nullable String description;
+  @NotNull
+  private String description;
 
   /**
    * Gets or Sets difficulty
@@ -59,6 +64,7 @@ public class ProjectBlueprint {
 
   private @Nullable StyleEnum style;
 
+
   public ProjectBlueprint() {
     super();
   }
@@ -66,6 +72,7 @@ public class ProjectBlueprint {
   /**
    * Constructor with only required parameters
    */
+  @PersistenceConstructor
   public ProjectBlueprint(UUID projectBlueprintUuid, String title) {
     this.projectBlueprintUuid = projectBlueprintUuid;
     this.title = title;

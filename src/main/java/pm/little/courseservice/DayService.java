@@ -22,8 +22,8 @@ public interface DayService  {
     public DayBlueprint updateDayBlueprint(UUID dayUuid, DayBlueprint updated)  ;
 
     public void deleteDayBlueprint(UUID dayUuid)  ;
-     
-    public DayComponentsMapper createDayComponentMapping(DayComponentsMapper mapping)  ;
+
+    public DayComponentsMapper createDayComponentMapping(DayComponentsMapper mapping, int order) ;
 
     public DayComponentsMapper getDayComponentMapping(UUID dayUuid, UUID componentUuid)  ;
 

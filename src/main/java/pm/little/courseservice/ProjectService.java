@@ -24,9 +24,11 @@ public interface ProjectService {
 
     public void deleteProjectBlueprint(UUID projectUuid);
 
-    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper mapping);
+    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper mapping, int order);
 
     public ProjectDaysMapper getProjectDayMapping(UUID projectUuid, UUID dayUuid);
+
+    public int getProjectDayMappingsOrder(UUID projectUuid, UUID dayUuid);
 
     public List<ProjectDaysMapper> getProjectDayMappings(UUID projectUuid, int limit, int offset);
 
