@@ -1,28 +1,33 @@
 package pm.little.api.controllers.implementation;
 
 import jakarta.annotation.Generated;
-import pm.little.api.controllers.ProjectsApi;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
+import pm.little.api.controllers.ProjectsApi;
+import pm.little.api.models.ProjectBlueprint;
+import pm.little.courseservice.ProjectService;
 
-
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen",
+        date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]",
+        comments = "Generator version: 7.11.0")
 @Controller
 @RequestMapping("${openapi.projectDay.base-path:}")
 public class ProjectsApiController implements ProjectsApi {
 
     private final NativeWebRequest request;
+    private final ProjectService projectService;
 
     @Autowired
-    public ProjectsApiController(NativeWebRequest request) {
+    public ProjectsApiController(NativeWebRequest request, ProjectService projectService) {
         this.request = request;
+        this.projectService = projectService;
     }
 
     @Override
@@ -30,4 +35,53 @@ public class ProjectsApiController implements ProjectsApi {
         return Optional.ofNullable(request);
     }
 
+    /**
+     * GET /projects?limit=...&offset=...
+     */
+    @Override
+    public ResponseEntity<List<ProjectBlueprint>> projectsGet(Integer limit, Integer offset) {
+        // Call your ProjectService to fetch a paginated list
+        List<ProjectBlueprint> blueprints = projectService.getAllProjectBlueprints(limit, offset);
+        return ResponseEntity.ok(blueprints);
+    }
+
+    /**
+     * POST /projects
+     */
+    @Override
+    public ResponseEntity<ProjectBlueprint> projectsPost(ProjectBlueprint projectBlueprint) {
+        // Create a new ProjectBlueprint
+        ProjectBlueprint created = projectService.createProjectBlueprint(projectBlueprint);
+        return ResponseEntity.ok(created);
+    }
+
+    /**
+     * DELETE /projects/{project_blueprint_uuid}
+     */
+    @Override
+    public ResponseEntity<Void> projectsProjectBlueprintUuidDelete(UUID projectBlueprintUuid) {
+        projectService.deleteProjectBlueprint(projectBlueprintUuid);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * GET /projects/{project_blueprint_uuid}
+     */
+    @Override
+    public ResponseEntity<ProjectBlueprint> projectsProjectBlueprintUuidGet(UUID projectBlueprintUuid) {
+        ProjectBlueprint blueprint = projectService.getProjectBlueprint(projectBlueprintUuid);
+        return ResponseEntity.ok(blueprint);
+    }
+
+    /**
+     * PUT /projects/{project_blueprint_uuid}
+     */
+    @Override
+    public ResponseEntity<ProjectBlueprint> projectsProjectBlueprintUuidPut(
+            UUID projectBlueprintUuid,
+            ProjectBlueprint projectBlueprint
+    ) {
+        ProjectBlueprint updated = projectService.updateProjectBlueprint(projectBlueprintUuid, projectBlueprint);
+        return ResponseEntity.ok(updated);
+    }
 }

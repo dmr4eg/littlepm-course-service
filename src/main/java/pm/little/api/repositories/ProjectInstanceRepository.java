@@ -13,5 +13,5 @@ import java.util.UUID;
 @Repository
 @RepositoryRestResource(exported = false)
 public interface ProjectInstanceRepository extends JpaRepository<ProjectInstance, ProjectInstanceId> {
-    Page<ProjectInstance> findByUser(UUID userUuid, Pageable pageable);
+    Page<ProjectInstance> findById_UserUuid(UUID userUuid, Pageable pageable);
 }

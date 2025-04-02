@@ -85,12 +85,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     // Project Days Mapper Operations
     @Override
-    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper mapping, int order) {
+    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper mapping, int sortOrder) {
         ProjectDaysMapper existing = projectDaysMapperRepository.findById(mapping.getId()).orElse(null);
         if (existing != null) {
             return existing;
         }
-        mapping.setOrder(order);
+        mapping.setSortOrder(sortOrder);
         return projectDaysMapperRepository.save(mapping);
     }
 
@@ -107,7 +107,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectDaysMapper> getProjectDayMappings(UUID projectUuid, int limit, int offset) {
         Pageable pageable = PageRequest.of(offset , limit);
-        return projectDaysMapperRepository.findByProjectId(projectUuid, pageable).getContent();
+        return projectDaysMapperRepository.findById_ProjectBlueprintUuid(projectUuid, pageable).getContent();
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return projectDaysMapperRepository.findById(id)
                 .orElseThrow(() -> new ProjectDayNotFoundException(id))
-                .getOrder();
+                .getSortOrder();
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ProjectDayNotFoundException(id);
         }
         ProjectDaysMapper existing = getProjectDayMapping(projectUuid, dayUuid);
-        existing.setOrder(updated.getOrder());
+        existing.setSortOrder(updated.getSortOrder());
         return projectDaysMapperRepository.save(existing);
     }
 
@@ -165,7 +165,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectInstance> getUserProjectInstances(UUID userUuid, int limit, int offset) {
         Pageable pageable = PageRequest.of(offset, limit);
-        return projectInstanceRepository.findByUser(userUuid, pageable).getContent();
+        return projectInstanceRepository.findById_UserUuid(userUuid, pageable).getContent();
     }
 
     @Override
@@ -205,5 +205,17 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectBlueprint blueprint = getProjectBlueprint(projectUuid);
         ProjectInstance instance = getProjectInstance(projectUuid, userUuid);
         return new ProjectDTO(blueprint, instance);
+    }
+
+    @Override
+    public List<ProjectDaysMapper> getAllProjectDayMappings(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        return projectDaysMapperRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public List<ProjectInstance> getAllProjectInstances(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        return projectInstanceRepository.findAll(pageable).getContent();
     }
 }

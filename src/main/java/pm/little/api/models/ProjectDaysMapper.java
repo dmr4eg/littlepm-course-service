@@ -25,7 +25,7 @@ public class ProjectDaysMapper {
   private ProjectDaysMapperId id;
 
   @NotNull
-  private Integer order;
+  private Integer sortOrder;
 
   public ProjectDaysMapper() {
     super();
@@ -35,9 +35,9 @@ public class ProjectDaysMapper {
    * Constructor with only required parameters
    */
   @PersistenceConstructor
-  public ProjectDaysMapper(ProjectDaysMapperId id, Integer order) {
+  public ProjectDaysMapper(ProjectDaysMapperId id, Integer sortOrder) {
     this.id = id;
-    this.order = order;
+    this.sortOrder = sortOrder;
   }
 
   public ProjectDaysMapper id(ProjectDaysMapperId id) {
@@ -60,8 +60,8 @@ public class ProjectDaysMapper {
     this.id = id;
   }
 
-  public ProjectDaysMapper order(Integer order) {
-    this.order = order;
+  public ProjectDaysMapper sortOrder(Integer sortOrder) {
+    this.sortOrder = sortOrder;
     return this;
   }
 
@@ -70,14 +70,14 @@ public class ProjectDaysMapper {
    * @return order
    */
   @NotNull 
-  @Schema(name = "order", description = "Order or position within a list", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("order")
-  public Integer getOrder() {
-    return order;
+  @Schema(name = "sortOrder", description = "Order or position within a list", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("sortOrder")
+  public Integer getSortOrder() {
+    return sortOrder;
   }
 
-  public void setOrder(Integer order) {
-    this.order = order;
+  public void setSortOrder(Integer sortOrder) {
+    this.sortOrder = sortOrder;
   }
 
   @Override
@@ -90,12 +90,12 @@ public class ProjectDaysMapper {
     }
     ProjectDaysMapper projectDaysMapper = (ProjectDaysMapper) o;
     return Objects.equals(this.id, projectDaysMapper.id) &&
-        Objects.equals(this.order, projectDaysMapper.order);
+        Objects.equals(this.sortOrder, projectDaysMapper.sortOrder);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, order);
+    return Objects.hash(id, sortOrder);
   }
 
   @Override
@@ -103,7 +103,7 @@ public class ProjectDaysMapper {
     StringBuilder sb = new StringBuilder();
     sb.append("class ProjectDaysMapper {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    order: ").append(toIndentedString(order)).append("\n");
+    sb.append("    sortOrder: ").append(toIndentedString(sortOrder)).append("\n");
     sb.append("}");
     return sb.toString();
   }

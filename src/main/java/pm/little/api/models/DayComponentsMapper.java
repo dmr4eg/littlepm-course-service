@@ -3,6 +3,7 @@ package pm.little.api.models;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Generated;
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
@@ -33,14 +34,15 @@ public class DayComponentsMapper {
   private TypeEnum type;
 
   @NotNull
-  private Integer order;
+  @Column(name = "sortOrder")
+  private Integer sortOrder;
 
-  public @NotNull Integer getOrder() {
-    return order;
+  public @NotNull Integer getSortOrder() {
+    return sortOrder;
   }
 
-  public void setOrder(@NotNull Integer order) {
-    this.order = order;
+  public void setSortOrder(@NotNull Integer sortOrder) {
+    this.sortOrder = sortOrder;
   }
 
   public DayComponentsMapper() {

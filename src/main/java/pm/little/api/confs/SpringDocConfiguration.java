@@ -18,23 +18,23 @@ public class SpringDocConfiguration {
         return new OpenAPI()
                 .info(
                         new Info()
-                                .title("Little PM API")
-                                .description("Comprehensive project management API with task tracking, reporting, and video resources. Provides secure access control and project organization. ")
-                                .license(
-                                        new License()
-                                                .name("Apache 2.0")
-                                                .url("https://www.apache.org/licenses/LICENSE-2.0.html")
-                                )
+                                .title("Project &amp; Day API")
+                                .description("An OpenAPI specification for project management, day templates, tasks, forms, media, and related user progress tracking.")
                                 .version("1.0.0")
                 )
                 .components(
                         new Components()
-                                .addSecuritySchemes("bearerAuth", new SecurityScheme()
+                                .addSecuritySchemes("admin_jwt", new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                )
+                                .addSecuritySchemes("user_jwt", new SecurityScheme()
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")
                                 )
                 )
-        ;
+                ;
     }
 }

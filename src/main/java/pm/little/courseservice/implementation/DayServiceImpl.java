@@ -81,12 +81,12 @@ public class DayServiceImpl implements DayService {
 
     // Day Components Mapper Operations
     @Override
-    public DayComponentsMapper createDayComponentMapping(DayComponentsMapper mapping, int order) {
+    public DayComponentsMapper createDayComponentMapping(DayComponentsMapper mapping, int sortOrder) {
         DayComponentsMapper existing = dayComponentsMapperRepository.findById(mapping.getId()).orElse(null);
         if (existing != null) {
             return existing;
         }
-        mapping.setOrder(order);
+        mapping.setSortOrder(sortOrder);
         return dayComponentsMapperRepository.save(mapping);
     }
 
@@ -101,9 +101,9 @@ public class DayServiceImpl implements DayService {
     }
 
     @Override
-    public List<DayComponentsMapper> getDayComponentMappings(UUID dayUuid, int limit, int offset) {
+    public List<DayComponentsMapper> getDayComponentMappings(UUID id, int limit, int offset) {
         Pageable pageable = PageRequest.of(offset, limit);
-        return dayComponentsMapperRepository.findByDayId(dayUuid, pageable).getContent();
+        return dayComponentsMapperRepository.findById_DayBlueprintUuid(id, pageable).getContent();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class DayServiceImpl implements DayService {
     @Override
     public List<DayInstance> getUserDayInstances(UUID userUuid, int limit, int offset) {
         Pageable pageable = PageRequest.of(offset, limit);
-        return dayInstanceRepository.findByUser(userUuid, pageable).getContent();
+        return dayInstanceRepository.findById_UserUuid(userUuid, pageable).getContent();
     }
 
     @Override

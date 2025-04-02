@@ -21,9 +21,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 public class ProjectDaysMapperId {
 
-  private UUID projectBlueprint;
+  private UUID projectBlueprintUuid;
 
-  private UUID day;
+  private UUID dayBlueprintUuid;
 
   public ProjectDaysMapperId() {
     super();
@@ -32,50 +32,50 @@ public class ProjectDaysMapperId {
   /**
    * Constructor with only required parameters
    */
-  public ProjectDaysMapperId(UUID projectBlueprint, UUID day) {
-    this.projectBlueprint = projectBlueprint;
-    this.day = day;
+  public ProjectDaysMapperId(UUID projectBlueprintUuid, UUID dayBlueprintUuid) {
+    this.projectBlueprintUuid = projectBlueprintUuid;
+    this.dayBlueprintUuid = dayBlueprintUuid;
   }
 
-  public ProjectDaysMapperId projectBlueprint(UUID projectBlueprint) {
-    this.projectBlueprint = projectBlueprint;
+  public ProjectDaysMapperId projectBlueprintUuid(UUID projectBlueprintUuid) {
+    this.projectBlueprintUuid = projectBlueprintUuid;
     return this;
   }
 
   /**
    * UUID for a Project Blueprint
-   * @return projectBlueprint
+   * @return projectBlueprintUuid
    */
   @NotNull
   @Valid
   @Schema(name = "project_blueprint", description = "UUID for a Project Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("project_blueprint")
   public UUID getProjectBlueprint() {
-    return projectBlueprint;
+    return projectBlueprintUuid;
   }
 
-  public void setProjectBlueprint(UUID projectBlueprint) {
-    this.projectBlueprint = projectBlueprint;
+  public void setProjectBlueprint(UUID projectBlueprintUuid) {
+    this.projectBlueprintUuid = projectBlueprintUuid;
   }
 
-  public ProjectDaysMapperId day(UUID day) {
-    this.day = day;
+  public ProjectDaysMapperId dayBlueprintUuid(UUID dayBlueprintUuid) {
+    this.dayBlueprintUuid = dayBlueprintUuid;
     return this;
   }
 
   /**
    * UUID for a Day Blueprint
-   * @return day
+   * @return dayBlueprintUuid
    */
   @NotNull @Valid 
-  @Schema(name = "day", description = "UUID for a Day Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("day")
+  @Schema(name = "dayBlueprintUuid", description = "UUID for a Day Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("dayBlueprintUuid")
   public UUID getDay() {
-    return day;
+    return dayBlueprintUuid;
   }
 
-  public void setDay(UUID day) {
-    this.day = day;
+  public void setDay(UUID dayBlueprintUuid) {
+    this.dayBlueprintUuid = dayBlueprintUuid;
   }
 
   @Override
@@ -87,21 +87,21 @@ public class ProjectDaysMapperId {
       return false;
     }
     ProjectDaysMapperId projectDaysMapperId = (ProjectDaysMapperId) o;
-    return Objects.equals(this.projectBlueprint, projectDaysMapperId.projectBlueprint) &&
-        Objects.equals(this.day, projectDaysMapperId.day);
+    return Objects.equals(this.projectBlueprintUuid, projectDaysMapperId.projectBlueprintUuid) &&
+        Objects.equals(this.dayBlueprintUuid, projectDaysMapperId.dayBlueprintUuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(projectBlueprint, day);
+    return Objects.hash(projectBlueprintUuid, dayBlueprintUuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ProjectDaysMapperId {\n");
-    sb.append("    projectBlueprint: ").append(toIndentedString(projectBlueprint)).append("\n");
-    sb.append("    day: ").append(toIndentedString(day)).append("\n");
+    sb.append("    projectBlueprintUuid: ").append(toIndentedString(projectBlueprintUuid)).append("\n");
+    sb.append("    dayBlueprintUuid: ").append(toIndentedString(dayBlueprintUuid)).append("\n");
     sb.append("}");
     return sb.toString();
   }

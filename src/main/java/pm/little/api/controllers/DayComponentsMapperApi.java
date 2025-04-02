@@ -50,6 +50,7 @@ public interface DayComponentsMapperApi {
      * @param dayComponentUuid Component UUID in the path (required)
      * @return No Content (status code 204)
      */
+
     @Operation(
         operationId = "dayComponentsMapperDayBlueprintUuidDayComponentUuidDelete",
         summary = "Delete day-component mapping (admin only)",

@@ -13,5 +13,5 @@ import java.util.UUID;
 @Repository
 @RepositoryRestResource(exported = false)
 public interface ProjectDaysMapperRepository extends JpaRepository<ProjectDaysMapper, ProjectDaysMapperId> {
-    Page<ProjectDaysMapper> findByProjectId(UUID projectUuid, Pageable pageable);
+    Page<ProjectDaysMapper> findById_ProjectBlueprintUuid(UUID projectBlueprintUuid, Pageable pageable);
 }

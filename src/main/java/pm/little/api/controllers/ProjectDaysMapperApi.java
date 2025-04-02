@@ -72,7 +72,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }, { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 } ]";
+                    String exampleString = "[ { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }, { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -114,7 +114,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -185,7 +185,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -231,7 +231,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"order\" : 1 }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DayService  {
+
+    // DAY BLUEPRINTS
+
     public DayBlueprint createDayBlueprint(DayBlueprint blueprint)  ;
 
     public List<DayBlueprint> getAllDayBlueprints(int limit, int offset)  ;
@@ -23,7 +26,9 @@ public interface DayService  {
 
     public void deleteDayBlueprint(UUID dayUuid)  ;
 
-    public DayComponentsMapper createDayComponentMapping(DayComponentsMapper mapping, int order) ;
+    // DAY COMPONENTS MAPPINGS
+
+    public DayComponentsMapper createDayComponentMapping(DayComponentsMapper mapping, int sortOrder) ;
 
     public DayComponentsMapper getDayComponentMapping(UUID dayUuid, UUID componentUuid)  ;
 
@@ -32,7 +37,9 @@ public interface DayService  {
     public DayComponentsMapper updateDayComponentMapping(UUID dayUuid, UUID componentUuid, DayComponentsMapper updated)  ;
 
     public void deleteDayComponentMapping(UUID dayUuid, UUID componentUuid)  ;
-     
+
+    // DAY INSTANCES
+
     public DayInstance createDayInstance(DayInstance instance)  ;
 
     public DayInstance getDayInstance(UUID dayUuid, UUID userUuid)  ;

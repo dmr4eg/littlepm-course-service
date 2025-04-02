@@ -13,5 +13,6 @@ import java.util.UUID;
 @Repository
 @RepositoryRestResource(exported = false)
 public interface DayInstanceRepository extends JpaRepository<DayInstance, DayInstanceId> {
-    Page<DayInstance> findByUser(UUID userUuid, Pageable pageable);
+    Page<DayInstance> findById_UserUuid(UUID userUuid, Pageable pageable);
+
 }
