@@ -3,7 +3,9 @@ package pm.little.courseservice.implementation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pm.little.api.models.*;
+import pm.little.api.models.DayBlueprint;
+import pm.little.api.models.DayComponentsMapper;
+import pm.little.api.models.DayInstance;
 import pm.little.api.models.dto.DayDTO;
 import pm.little.api.models.enums.StatusEnum;
 import pm.little.api.models.ids.DayComponentsMapperId;
@@ -18,9 +20,11 @@ import pm.little.courseservice.exceptions.DayInstanceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class DayServiceImpl implements DayService {
+
     private final DayBlueprintRepository dayBlueprintRepository;
     private final DayComponentsMapperRepository dayComponentsMapperRepository;
     private final DayInstanceRepository dayInstanceRepository;
@@ -33,6 +37,19 @@ public class DayServiceImpl implements DayService {
         this.dayBlueprintRepository = dayBlueprintRepository;
         this.dayComponentsMapperRepository = dayComponentsMapperRepository;
         this.dayInstanceRepository = dayInstanceRepository;
+    }
+
+    private DayDTO toDayDTO(DayInstance instance) {
+        // Retrieve the blueprint for the instance
+        UUID blueprintUuid = instance.getId().getDayBlueprintUuid();
+        DayBlueprint blueprint = dayBlueprintRepository.findById(blueprintUuid)
+                .orElseThrow(() -> new DayBlueprintNotFoundException(blueprintUuid));
+
+        // Build the DTO
+        DayDTO dto = new DayDTO();
+        dto.setBlueprint(blueprint);
+        dto.setInstance(instance);
+        return dto;
     }
 
     @Override
@@ -126,42 +143,51 @@ public class DayServiceImpl implements DayService {
         dayComponentsMapperRepository.deleteById(id);
     }
 
-    // Day Instance Operations
     @Override
-    public DayInstance createDayInstance(DayInstance instance) {
+    public DayDTO createDayInstance(DayInstance instance) {
         DayInstance existing = dayInstanceRepository.findById(instance.getId()).orElse(null);
+        // If it already exists with status IN_PROGRESS, return that same thing
         if (existing != null && existing.getStatus() == StatusEnum.IN_PROGRESS) {
-            return existing;
+            return toDayDTO(existing);
         }
+        // Otherwise, set status and save
         instance.setStatus(StatusEnum.IN_PROGRESS);
-        return dayInstanceRepository.save(instance);
+        DayInstance saved = dayInstanceRepository.save(instance);
+        return toDayDTO(saved);
     }
 
     @Override
-    public DayInstance getDayInstance(UUID dayUuid, UUID userUuid) {
+    public DayDTO getDayInstance(UUID dayUuid, UUID userUuid) {
         DayInstanceId id = new DayInstanceId(dayUuid, userUuid);
-        if (!dayInstanceRepository.existsById(id)) {
-            throw new DayInstanceNotFoundException(id);
-        }
-        return dayInstanceRepository.findById(id)
+        DayInstance instance = dayInstanceRepository.findById(id)
                 .orElseThrow(() -> new DayInstanceNotFoundException(id));
+        return toDayDTO(instance);
     }
 
+
     @Override
-    public List<DayInstance> getUserDayInstances(UUID userUuid, int limit, int offset) {
+    public List<DayDTO> getUserDayInstancesAsDTO(UUID userUuid, int limit, int offset) {
         Pageable pageable = PageRequest.of(offset, limit);
-        return dayInstanceRepository.findById_UserUuid(userUuid, pageable).getContent();
+        List<DayInstance> rawInstances = dayInstanceRepository.findById_UserUuid(userUuid, pageable).getContent();
+        return rawInstances.stream()
+                .map(this::toDayDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public DayInstance updateDayInstance(UUID dayUuid, UUID userUuid, DayInstance updated) {
+    public DayDTO updateDayInstance(UUID dayUuid, UUID userUuid, DayInstance updated) {
         DayInstanceId id = new DayInstanceId(dayUuid, userUuid);
         if (!dayInstanceRepository.existsById(id)) {
             throw new DayInstanceNotFoundException(id);
         }
-        DayInstance existing = getDayInstance(dayUuid, userUuid);
+        DayInstance existing = dayInstanceRepository.findById(id)
+                .orElseThrow(() -> new DayInstanceNotFoundException(id));
+
         existing.setStatus(updated.getStatus());
-        return dayInstanceRepository.save(existing);
+        // If you have more fields you want to update, do them here
+
+        DayInstance saved = dayInstanceRepository.save(existing);
+        return toDayDTO(saved);
     }
 
     @Override
@@ -173,11 +199,16 @@ public class DayServiceImpl implements DayService {
         dayInstanceRepository.deleteById(id);
     }
 
-    // DTO Composition
     @Override
     public DayDTO getDayDTO(UUID dayUuid, UUID userUuid) {
         DayBlueprint blueprint = getDayBlueprint(dayUuid);
-        DayInstance instance = getDayInstance(dayUuid, userUuid);
+        DayInstance instance = getDayInstanceRaw(dayUuid, userUuid);
         return new DayDTO(blueprint, instance);
+    }
+
+    private DayInstance getDayInstanceRaw(UUID dayUuid, UUID userUuid) {
+        DayInstanceId id = new DayInstanceId(dayUuid, userUuid);
+        return dayInstanceRepository.findById(id)
+                .orElseThrow(() -> new DayInstanceNotFoundException(id));
     }
 }

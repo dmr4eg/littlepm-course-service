@@ -36,19 +36,19 @@ public interface ProjectService {
 
     public void deleteProjectDayMapping(UUID projectUuid, UUID dayUuid);
 
-    public ProjectInstance createProjectInstance(ProjectInstance instance);
+    public ProjectDTO createProjectInstance(ProjectInstance instance);
 
-    public ProjectInstance getProjectInstance(UUID projectUuid, UUID userUuid);
+    public ProjectDTO getProjectInstance(UUID projectUuid, UUID userUuid);
 
-    public List<ProjectInstance> getUserProjectInstances(UUID userUuid, int limit, int offset);
+    public List<ProjectDTO> getUserProjectInstancesAsDTO(UUID userUuid, int limit, int offset);
 
-    public ProjectInstance updateProjectInstance(UUID projectUuid, UUID userUuid, ProjectInstance updated);
+    public ProjectDTO updateProjectInstance(UUID projectUuid, UUID userUuid, ProjectInstance updated);
 
     public void deleteProjectInstance(UUID projectUuid, UUID userUuid);
 
     public ProjectDTO getProjectDTO(UUID projectUuid, UUID userUuid);
 
-    List<ProjectDaysMapper> getAllProjectDayMappings(int limit, int offset);
+    public List<ProjectDTO> getAllProjectInstancesAsDTO(int limit, int offset);
 
-    List<ProjectInstance> getAllProjectInstances(int limit, int offset);
+    public List<ProjectDaysMapper> getAllProjectDayMappings(int limit, int offset);
 }

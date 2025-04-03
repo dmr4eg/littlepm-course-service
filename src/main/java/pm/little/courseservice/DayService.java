@@ -40,13 +40,13 @@ public interface DayService  {
 
     // DAY INSTANCES
 
-    public DayInstance createDayInstance(DayInstance instance)  ;
+    public DayDTO createDayInstance(DayInstance instance)  ;
 
-    public DayInstance getDayInstance(UUID dayUuid, UUID userUuid)  ;
+    public DayDTO getDayInstance(UUID dayUuid, UUID userUuid)  ;
 
-    public List<DayInstance> getUserDayInstances(UUID userUuid, int limit, int offset)  ;
+    public List<DayDTO> getUserDayInstancesAsDTO(UUID userUuid, int limit, int offset) ;
 
-    public DayInstance updateDayInstance(UUID dayUuid, UUID userUuid, DayInstance updated)  ;
+    public DayDTO updateDayInstance(UUID dayUuid, UUID userUuid, DayInstance updated)  ;
 
     public void deleteDayInstance(UUID dayUuid, UUID userUuid)  ;
      

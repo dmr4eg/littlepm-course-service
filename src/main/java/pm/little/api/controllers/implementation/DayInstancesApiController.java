@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 import pm.little.api.controllers.DayInstancesApi;
 import pm.little.api.models.DayInstance;
+import pm.little.api.models.dto.DayDTO;
 import pm.little.courseservice.DayService;
 
 import java.util.List;
@@ -49,50 +50,52 @@ public class DayInstancesApiController implements DayInstancesApi {
 
     /**
      * GET /day-instances/{day_blueprint_uuid}/{user_uuid} : Get a specific day instance
+     * Now returning DayDTO
      */
     @Override
-    public ResponseEntity<DayInstance> dayInstancesDayBlueprintUuidUserUuidGet(
+    public ResponseEntity<DayDTO> dayInstancesDayBlueprintUuidUserUuidGet(
             UUID dayBlueprintUuid,
             UUID userUuid
     ) {
-        DayInstance instance = dayService.getDayInstance(dayBlueprintUuid, userUuid);
-        return ResponseEntity.ok(instance);
+        DayDTO dto = dayService.getDayInstance(dayBlueprintUuid, userUuid);
+        return ResponseEntity.ok(dto);
     }
 
     /**
      * PUT /day-instances/{day_blueprint_uuid}/{user_uuid} : Update a day instance
+     * Now returning DayDTO
      */
     @Override
-    public ResponseEntity<DayInstance> dayInstancesDayBlueprintUuidUserUuidPut(
+    public ResponseEntity<DayDTO> dayInstancesDayBlueprintUuidUserUuidPut(
             UUID dayBlueprintUuid,
             UUID userUuid,
             DayInstance dayInstance
     ) {
-        DayInstance updated = dayService.updateDayInstance(dayBlueprintUuid, userUuid, dayInstance);
+        DayDTO updated = dayService.updateDayInstance(dayBlueprintUuid, userUuid, dayInstance);
         return ResponseEntity.ok(updated);
     }
 
     /**
      * GET /day-instances : List all day instances
-     *
-     * NOTE:
-     * - If you do not have a service method to retrieve *all* DayInstances,
-     *   you will need to implement one (e.g., `dayService.getAllDayInstances()`).
-     * - Adjust as needed if you only want to list day instances for a specific user,
-     *   or if you have pagination, etc.
+     * Now returning List<DayDTO>
      */
-//    @Override
-//    public ResponseEntity<List<DayInstance>> dayInstancesGet(UUID userUuid) {
-//        List<DayInstance> list = dayService.getUserDayInstances(userUuid);
-//        return ResponseEntity.ok(list);
-//    }
+    @Override
+    public ResponseEntity<List<DayDTO>> dayInstancesGet(
+            UUID userUuid,
+            Integer limit,
+            Integer offset
+    ) {
+        List<DayDTO> dtos = dayService.getUserDayInstancesAsDTO(userUuid, limit, offset);
+        return ResponseEntity.ok(dtos);
+    }
 
     /**
      * POST /day-instances : Create a day instance
+     * Now returning DayDTO
      */
     @Override
-    public ResponseEntity<DayInstance> dayInstancesPost(DayInstance dayInstance) {
-        DayInstance created = dayService.createDayInstance(dayInstance);
+    public ResponseEntity<DayDTO> dayInstancesPost(DayInstance dayInstance) {
+        DayDTO created = dayService.createDayInstance(dayInstance);
         return ResponseEntity.ok(created);
     }
 

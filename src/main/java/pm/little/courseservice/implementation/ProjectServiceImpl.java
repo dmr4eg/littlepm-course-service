@@ -3,7 +3,9 @@ package pm.little.courseservice.implementation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pm.little.api.models.*;
+import pm.little.api.models.ProjectBlueprint;
+import pm.little.api.models.ProjectDaysMapper;
+import pm.little.api.models.ProjectInstance;
 import pm.little.api.models.dto.ProjectDTO;
 import pm.little.api.models.enums.StatusEnum;
 import pm.little.api.models.ids.ProjectDaysMapperId;
@@ -18,6 +20,7 @@ import pm.little.courseservice.exceptions.ProjectInstanceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -35,7 +38,19 @@ public class ProjectServiceImpl implements ProjectService {
         this.projectInstanceRepository = projectInstanceRepository;
     }
 
-    // Project Blueprint Operations
+    private ProjectDTO toProjectDTO(ProjectInstance instance) {
+        // Grab the matching blueprint
+        UUID blueprintUuid = instance.getId().getProjectBlueprintUuid();
+        ProjectBlueprint blueprint = projectBlueprintRepository.findById(blueprintUuid)
+                .orElseThrow(() -> new ProjectBlueprintNotFoundException(blueprintUuid));
+
+        // Build the DTO
+        ProjectDTO dto = new ProjectDTO();
+        dto.setBlueprint(blueprint);
+        dto.setInstance(instance);
+        return dto;
+    }
+
     @Override
     public ProjectBlueprint createProjectBlueprint(ProjectBlueprint blueprint) {
         ProjectBlueprint existing = projectBlueprintRepository.findById(blueprint.getProjectBlueprintUuid()).orElse(null);
@@ -143,44 +158,60 @@ public class ProjectServiceImpl implements ProjectService {
 
     // Project Instance Operations
     @Override
-    public ProjectInstance createProjectInstance(ProjectInstance instance) {
+    public ProjectDTO createProjectInstance(ProjectInstance instance) {
         ProjectInstance existing = projectInstanceRepository.findById(instance.getId()).orElse(null);
+        // If it exists and is already IN_PROGRESS, return that
         if (existing != null && existing.getStatus() == StatusEnum.IN_PROGRESS) {
-            return existing;
+            return toProjectDTO(existing);
         }
         instance.setStatus(StatusEnum.IN_PROGRESS);
-        return projectInstanceRepository.save(instance);
+        ProjectInstance saved = projectInstanceRepository.save(instance);
+        return toProjectDTO(saved);
     }
 
     @Override
-    public ProjectInstance getProjectInstance(UUID projectUuid, UUID userUuid) {
+    public ProjectDTO getProjectInstance(UUID projectUuid, UUID userUuid) {
         ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
-        if (!projectInstanceRepository.existsById(id)) {
-            throw new ProjectInstanceNotFoundException(id);
-        }
-        return projectInstanceRepository.findById(id)
+        ProjectInstance instance = projectInstanceRepository.findById(id)
                 .orElseThrow(() -> new ProjectInstanceNotFoundException(id));
+        return toProjectDTO(instance);
     }
 
     @Override
-    public List<ProjectInstance> getUserProjectInstances(UUID userUuid, int limit, int offset) {
+    public List<ProjectDTO> getUserProjectInstancesAsDTO(UUID userUuid, int limit, int offset) {
         Pageable pageable = PageRequest.of(offset, limit);
-        return projectInstanceRepository.findById_UserUuid(userUuid, pageable).getContent();
+        List<ProjectInstance> instances = projectInstanceRepository.findById_UserUuid(userUuid, pageable).getContent();
+        return instances.stream()
+                .map(this::toProjectDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public ProjectInstance updateProjectInstance(UUID projectUuid, UUID userUuid, ProjectInstance updated) {
+    public List<ProjectDTO> getAllProjectInstancesAsDTO(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        List<ProjectInstance> instances = projectInstanceRepository.findAll(pageable).getContent();
+        return instances.stream()
+                .map(this::toProjectDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProjectDTO updateProjectInstance(UUID projectUuid, UUID userUuid, ProjectInstance updated) {
         ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
         if (!projectInstanceRepository.existsById(id)) {
             throw new ProjectInstanceNotFoundException(id);
         }
-        ProjectInstance existing = getProjectInstance(projectUuid, userUuid);
+        ProjectInstance existing = projectInstanceRepository.findById(id)
+                .orElseThrow(() -> new ProjectInstanceNotFoundException(id));
+
         existing.setStatus(updated.getStatus());
         existing.setStartDate(updated.getStartDate());
         existing.setEndDate(updated.getEndDate());
         existing.setFeedback(updated.getFeedback());
         existing.setWhatWentWell(updated.getWhatWentWell());
-        return projectInstanceRepository.save(existing);
+
+        ProjectInstance saved = projectInstanceRepository.save(existing);
+        return toProjectDTO(saved);
     }
 
     @Override
@@ -192,30 +223,24 @@ public class ProjectServiceImpl implements ProjectService {
         projectInstanceRepository.deleteById(id);
     }
 
-    // DTO Composition
+    // If you already had getProjectDTO(...) in your interface:
     @Override
     public ProjectDTO getProjectDTO(UUID projectUuid, UUID userUuid) {
-        if (!projectBlueprintRepository.existsById(projectUuid)) {
-            throw new ProjectBlueprintNotFoundException(projectUuid);
-        }
-        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
-        if (!projectInstanceRepository.existsById(id)) {
-            throw new ProjectInstanceNotFoundException(id);
-        }
         ProjectBlueprint blueprint = getProjectBlueprint(projectUuid);
-        ProjectInstance instance = getProjectInstance(projectUuid, userUuid);
+        ProjectInstance instance = getProjectInstanceRaw(projectUuid, userUuid);
         return new ProjectDTO(blueprint, instance);
+    }
+
+    // Helper method to fetch raw instance for internal usage
+    private ProjectInstance getProjectInstanceRaw(UUID projectUuid, UUID userUuid) {
+        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+        return projectInstanceRepository.findById(id)
+                .orElseThrow(() -> new ProjectInstanceNotFoundException(id));
     }
 
     @Override
     public List<ProjectDaysMapper> getAllProjectDayMappings(int limit, int offset) {
         Pageable pageable = PageRequest.of(offset, limit);
         return projectDaysMapperRepository.findAll(pageable).getContent();
-    }
-
-    @Override
-    public List<ProjectInstance> getAllProjectInstances(int limit, int offset) {
-        Pageable pageable = PageRequest.of(offset, limit);
-        return projectInstanceRepository.findAll(pageable).getContent();
     }
 }

@@ -6,8 +6,6 @@
 package pm.little.api.controllers;
 
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import pm.little.api.models.ProjectDaysMapper;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -29,12 +27,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
 @Tag(name = "project-days-mapper", description = "the project-days-mapper API")
 public interface ProjectDaysMapperApi {
@@ -72,7 +71,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }, { \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 } ]";
+                    String exampleString = "[ { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_blueprint_uuid\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }, { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_blueprint_uuid\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -114,7 +113,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_blueprint_uuid\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -185,7 +184,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_blueprint_uuid\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -231,7 +230,7 @@ public interface ProjectDaysMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
+                    String exampleString = "{ \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_blueprint_uuid\" : \"557c482c-8bb5-4a65-9bef-848a953238ae\" }, \"sortOrder\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

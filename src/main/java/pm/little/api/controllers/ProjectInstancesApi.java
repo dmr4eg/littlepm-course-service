@@ -6,7 +6,7 @@
 package pm.little.api.controllers;
 
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
+import pm.little.api.models.dto.*;
 import pm.little.api.models.ProjectInstance;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -28,13 +28,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
 @Tag(name = "project-instances", description = "the project-instances API")
 public interface ProjectInstancesApi {
@@ -44,16 +44,19 @@ public interface ProjectInstancesApi {
     }
 
     /**
-     * GET /project-instances : List all project instances (admin or user)
+     * GET /project-instances : List all project instances
      *
+     * @param limit Limit of the list (required)
+     * @param offset Offset of the list (required)
+     * @param userUuid The UUID of the user (required)
      * @return A list of ProjectInstance (status code 200)
      */
     @Operation(
         operationId = "projectInstancesGet",
-        summary = "List all project instances (admin or user)",
+        summary = "List all project instances",
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of ProjectInstance", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectInstance.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectDTO.class)))
             })
         },
         security = {
@@ -66,13 +69,15 @@ public interface ProjectInstancesApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<List<ProjectInstance>> projectInstancesGet(
-        
+    default ResponseEntity<List<ProjectDTO>> projectInstancesGet(
+        @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
+        @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset,
+        @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" }, { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" } ]";
+                    String exampleString = "[ { \"blueprint\" : { \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" } }, { \"blueprint\" : { \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" } } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -94,7 +99,7 @@ public interface ProjectInstancesApi {
         summary = "Create a new project instance (user)",
         responses = {
             @ApiResponse(responseCode = "200", description = "Created project instance", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectInstance.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
             })
         },
         security = {
@@ -108,13 +113,13 @@ public interface ProjectInstancesApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<ProjectInstance> projectInstancesPost(
+    default ResponseEntity<ProjectDTO> projectInstancesPost(
         @Parameter(name = "ProjectInstance", description = "", required = true) @Valid @RequestBody ProjectInstance projectInstance
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" }";
+                    String exampleString = "{ \"blueprint\" : { \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -168,7 +173,7 @@ public interface ProjectInstancesApi {
         summary = "Get a specific project instance",
         responses = {
             @ApiResponse(responseCode = "200", description = "ProjectInstance", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectInstance.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
             })
         },
         security = {
@@ -181,14 +186,14 @@ public interface ProjectInstancesApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<ProjectInstance> projectInstancesProjectBlueprintUuidUserUuidGet(
+    default ResponseEntity<ProjectDTO> projectInstancesProjectBlueprintUuidUserUuidGet(
         @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
         @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" }";
+                    String exampleString = "{ \"blueprint\" : { \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -212,7 +217,7 @@ public interface ProjectInstancesApi {
         summary = "Update a project instance (user)",
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated project instance", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectInstance.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
             })
         },
         security = {
@@ -226,7 +231,7 @@ public interface ProjectInstancesApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<ProjectInstance> projectInstancesProjectBlueprintUuidUserUuidPut(
+    default ResponseEntity<ProjectDTO> projectInstancesProjectBlueprintUuidUserUuidPut(
         @Parameter(name = "project_blueprint_uuid", description = "The UUID of the project blueprint", required = true, in = ParameterIn.PATH) @PathVariable("project_blueprint_uuid") UUID projectBlueprintUuid,
         @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid,
         @Parameter(name = "ProjectInstance", description = "", required = true) @Valid @RequestBody ProjectInstance projectInstance
@@ -234,7 +239,7 @@ public interface ProjectInstancesApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" }";
+                    String exampleString = "{ \"blueprint\" : { \"difficulty\" : \"EASY\", \"project_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"welcome_video_url\" : \"welcome_video_url\", \"poster_url\" : \"poster_url\", \"description\" : \"description\", \"style\" : \"DIY\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"project_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\", \"start_date\" : \"2021-09-01T10:00:00Z\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

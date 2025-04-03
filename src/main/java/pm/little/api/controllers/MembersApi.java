@@ -6,7 +6,6 @@
 package pm.little.api.controllers;
 
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import pm.little.api.models.Members;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -28,12 +27,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
 @Tag(name = "members", description = "the members API")
 public interface MembersApi {
@@ -45,6 +45,8 @@ public interface MembersApi {
     /**
      * GET /members : List all members records
      *
+     * @param limit Limit of the list (required)
+     * @param offset Offset of the list (required)
      * @return A list of Members (status code 200)
      */
     @Operation(
@@ -66,7 +68,8 @@ public interface MembersApi {
     )
     
     default ResponseEntity<List<Members>> membersGet(
-        
+        @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
+        @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {

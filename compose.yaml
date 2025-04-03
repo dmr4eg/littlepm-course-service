@@ -6,12 +6,3 @@ services:
       - env/postgres.env
     ports:
       - '5432:5432'
-
-#services:
-#  postgres:
-#    image: docker.io/postgres:alpine3.20
-#    volumes:
-#      - postgres-data:/var/lib/postgresql/data
-#    networks:
-#      - data-net
-#    restart: always

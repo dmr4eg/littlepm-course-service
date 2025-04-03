@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
 import pm.little.api.controllers.ProjectInstancesApi;
 import pm.little.api.models.ProjectInstance;
+import pm.little.api.models.dto.ProjectDTO;
 import pm.little.courseservice.ProjectService;
 
 import java.util.List;
@@ -37,31 +38,27 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
 
     /**
      * GET /project-instances
-     *
-     * The OpenAPI spec suggests returning "all" project instances for admin or user.
-     * If you truly want "all" for an admin, you can add a method to your service:
-     *   List<ProjectInstance> getAllProjectInstances(int limit, int offset);
-     *
-     * Alternatively, you might:
-     * - Check if the current user is admin. If so, getAll.
-     * - Otherwise, get only the instances for that user.
-     *
-     * Below is a simple example returning all:
+     * Return a list of ProjectDTO instead of ProjectInstance.
      */
     @Override
-    public ResponseEntity<List<ProjectInstance>> projectInstancesGet() {
-        // e.g. you might want to parse limit/offset from headers or add them to the interface
-        // For demonstration, assume you've got service method for all instances:
-        List<ProjectInstance> instances = projectService.getAllProjectInstances(100, 0); // Hard-coded example
-        return ResponseEntity.ok(instances);
+    public ResponseEntity<List<ProjectDTO>> projectInstancesGet(Integer limit, Integer offset, UUID userUuid) {
+        // For example, if you want to return *all* project instances:
+        //   List<ProjectDTO> dtos = projectService.getAllProjectInstancesAsDTO(limit, offset);
+        // Or if you want to return only the user’s project instances:
+        //   List<ProjectDTO> dtos = projectService.getUserProjectInstancesAsDTO(userUuid, limit, offset);
+        //
+        // For now, suppose we return all (or you can adjust):
+        List<ProjectDTO> dtos = projectService.getAllProjectInstancesAsDTO(limit, offset);
+        return ResponseEntity.ok(dtos);
     }
 
     /**
      * POST /project-instances
+     * Create a new project instance, returning ProjectDTO
      */
     @Override
-    public ResponseEntity<ProjectInstance> projectInstancesPost(ProjectInstance projectInstance) {
-        ProjectInstance created = projectService.createProjectInstance(projectInstance);
+    public ResponseEntity<ProjectDTO> projectInstancesPost(ProjectInstance projectInstance) {
+        ProjectDTO created = projectService.createProjectInstance(projectInstance);
         return ResponseEntity.ok(created);
     }
 
@@ -79,26 +76,28 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
 
     /**
      * GET /project-instances/{project_blueprint_uuid}/{user_uuid}
+     * Return a single ProjectDTO
      */
     @Override
-    public ResponseEntity<ProjectInstance> projectInstancesProjectBlueprintUuidUserUuidGet(
+    public ResponseEntity<ProjectDTO> projectInstancesProjectBlueprintUuidUserUuidGet(
             UUID projectBlueprintUuid,
             UUID userUuid
     ) {
-        ProjectInstance instance = projectService.getProjectInstance(projectBlueprintUuid, userUuid);
-        return ResponseEntity.ok(instance);
+        ProjectDTO dto = projectService.getProjectInstance(projectBlueprintUuid, userUuid);
+        return ResponseEntity.ok(dto);
     }
 
     /**
      * PUT /project-instances/{project_blueprint_uuid}/{user_uuid}
+     * Update an existing project instance, returning ProjectDTO
      */
     @Override
-    public ResponseEntity<ProjectInstance> projectInstancesProjectBlueprintUuidUserUuidPut(
+    public ResponseEntity<ProjectDTO> projectInstancesProjectBlueprintUuidUserUuidPut(
             UUID projectBlueprintUuid,
             UUID userUuid,
             ProjectInstance projectInstance
     ) {
-        ProjectInstance updated = projectService.updateProjectInstance(projectBlueprintUuid, userUuid, projectInstance);
+        ProjectDTO updated = projectService.updateProjectInstance(projectBlueprintUuid, userUuid, projectInstance);
         return ResponseEntity.ok(updated);
     }
 }

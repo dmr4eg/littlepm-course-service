@@ -6,7 +6,7 @@
 package pm.little.api.controllers;
 
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
+import pm.little.api.models.dto.*;
 import pm.little.api.models.DayInstance;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -28,12 +28,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
 @Tag(name = "day-instances", description = "the day-instances API")
 public interface DayInstancesApi {
@@ -85,7 +86,7 @@ public interface DayInstancesApi {
         summary = "Get a specific day instance",
         responses = {
             @ApiResponse(responseCode = "200", description = "DayInstance", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = DayInstance.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = DayDTO.class))
             })
         },
         security = {
@@ -98,14 +99,14 @@ public interface DayInstancesApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<DayInstance> dayInstancesDayBlueprintUuidUserUuidGet(
+    default ResponseEntity<DayDTO> dayInstancesDayBlueprintUuidUserUuidGet(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
         @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" }";
+                    String exampleString = "{ \"blueprint\" : { \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -129,7 +130,7 @@ public interface DayInstancesApi {
         summary = "Update a day instance",
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated day instance", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = DayInstance.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = DayDTO.class))
             })
         },
         security = {
@@ -143,7 +144,7 @@ public interface DayInstancesApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<DayInstance> dayInstancesDayBlueprintUuidUserUuidPut(
+    default ResponseEntity<DayDTO> dayInstancesDayBlueprintUuidUserUuidPut(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
         @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid,
         @Parameter(name = "DayInstance", description = "", required = true) @Valid @RequestBody DayInstance dayInstance
@@ -151,7 +152,7 @@ public interface DayInstancesApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" }";
+                    String exampleString = "{ \"blueprint\" : { \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -165,6 +166,9 @@ public interface DayInstancesApi {
     /**
      * GET /day-instances : List all day instances
      *
+     * @param userUuid The UUID of the user (required)
+     * @param limit Limit of the list (required)
+     * @param offset Offset of the list (required)
      * @return A list of DayInstance (status code 200)
      */
     @Operation(
@@ -172,7 +176,7 @@ public interface DayInstancesApi {
         summary = "List all day instances",
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of DayInstance", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DayInstance.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DayDTO.class)))
             })
         },
         security = {
@@ -185,13 +189,15 @@ public interface DayInstancesApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<List<DayInstance>> dayInstancesGet(
-        
+    default ResponseEntity<List<DayDTO>> dayInstancesGet(
+        @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid,
+        @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
+        @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" }, { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" } ]";
+                    String exampleString = "[ { \"blueprint\" : { \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" } }, { \"blueprint\" : { \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" } } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -213,7 +219,7 @@ public interface DayInstancesApi {
         summary = "Create a day instance",
         responses = {
             @ApiResponse(responseCode = "200", description = "Created day instance", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = DayInstance.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = DayDTO.class))
             })
         },
         security = {
@@ -227,13 +233,13 @@ public interface DayInstancesApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<DayInstance> dayInstancesPost(
+    default ResponseEntity<DayDTO> dayInstancesPost(
         @Parameter(name = "DayInstance", description = "", required = true) @Valid @RequestBody DayInstance dayInstance
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" }";
+                    String exampleString = "{ \"blueprint\" : { \"day_blueprint_uuid\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"description\" : \"description\", \"text\" : \"text\", \"title\" : \"title\" }, \"instance\" : { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"user_uuid\" : \"66de88ad-5c8d-4d20-a0ab-bbb7ccc15333\" }, \"status\" : \"IN_PROGRESS\" } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
