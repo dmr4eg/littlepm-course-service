@@ -45,6 +45,10 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectDTO toProjectDTO(ProjectInstance projectInstance) {
         // Grab the matching blueprint
         UUID projectBlueprintUuid = projectInstance.getId().getProjectBlueprintUuid();
+        // Check if the ProjectBlueprint exists
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
         ProjectBlueprint projectBlueprint = projectBlueprintRepository.findById(projectBlueprintUuid)
                 .orElseThrow(() -> new ProjectBlueprintNotFoundException(projectBlueprintUuid));
 

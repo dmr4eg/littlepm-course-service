@@ -39,11 +39,11 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
      * DELETE /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}
      */
     @Override
-    public ResponseEntity<Void> dayComponentsMapperDayBlueprintUuidDayComponentUuidDelete(
+    public ResponseEntity<Void> dayComponentsMapperDayBlueprintUuidComponentUuidDelete(
             UUID dayBlueprintUuid,
-            UUID dayComponentUuid
+            UUID componentUuid
     ) {
-        dayService.deleteDayComponentMapping(dayBlueprintUuid, dayComponentUuid);
+        dayService.deleteDayComponentMapping(dayBlueprintUuid, componentUuid);
         return ResponseEntity.noContent().build();
     }
 
@@ -51,11 +51,11 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
      * GET /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}
      */
     @Override
-    public ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidDayComponentUuidGet(
+    public ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidComponentUuidGet(
             UUID dayBlueprintUuid,
-            UUID dayComponentUuid
+            UUID componentUuid
     ) {
-        DayComponentsMapper mapping = dayService.getDayComponentMapping(dayBlueprintUuid, dayComponentUuid);
+        DayComponentsMapper mapping = dayService.getDayComponentMapping(dayBlueprintUuid, componentUuid);
         return ResponseEntity.ok(mapping);
     }
 
@@ -63,12 +63,12 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
      * PUT /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}
      */
     @Override
-    public ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidDayComponentUuidPut(
+    public ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidComponentUuidPut(
             UUID dayBlueprintUuid,
-            UUID dayComponentUuid,
+            UUID componentUuid,
             DayComponentsMapper dayComponentsMapper
     ) {
-        DayComponentsMapper updated = dayService.updateDayComponentMapping(dayBlueprintUuid, dayComponentUuid, dayComponentsMapper);
+        DayComponentsMapper updated = dayService.updateDayComponentMapping(dayBlueprintUuid, componentUuid, dayComponentsMapper);
         return ResponseEntity.ok(updated);
     }
 

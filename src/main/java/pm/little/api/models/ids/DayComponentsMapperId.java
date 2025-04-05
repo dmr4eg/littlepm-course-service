@@ -23,7 +23,7 @@ public class DayComponentsMapperId {
 
   private UUID dayBlueprintUuid;
 
-  private UUID dayComponentUuid;
+  private UUID componentUuid;
 
   public DayComponentsMapperId() {
     super();
@@ -32,9 +32,9 @@ public class DayComponentsMapperId {
   /**
    * Constructor with only required parameters
    */
-  public DayComponentsMapperId(UUID dayBlueprintUuid, UUID dayComponentUuid) {
+  public DayComponentsMapperId(UUID dayBlueprintUuid, UUID componentUuid) {
     this.dayBlueprintUuid = dayBlueprintUuid;
-    this.dayComponentUuid = dayComponentUuid;
+    this.componentUuid = componentUuid;
   }
 
   public DayComponentsMapperId dayBlueprintUuid(UUID dayBlueprintUuid) {
@@ -58,24 +58,24 @@ public class DayComponentsMapperId {
     this.dayBlueprintUuid = dayBlueprintUuid;
   }
 
-  public DayComponentsMapperId dayComponentUuid(UUID dayComponentUuid) {
-    this.dayComponentUuid = dayComponentUuid;
+  public DayComponentsMapperId componentUuid(UUID componentUuid) {
+    this.componentUuid = componentUuid;
     return this;
   }
 
   /**
    * UUID for a Day Component
-   * @return dayComponentUuid
+   * @return componentUuid
    */
   @NotNull @Valid 
   @Schema(name = "day_component_uuid", description = "UUID for a Day Component", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("day_component_uuid")
-  public UUID getDayComponentUuid() {
-    return dayComponentUuid;
+  public UUID getComponentUuid() {
+    return componentUuid;
   }
 
-  public void setDayComponentUuid(UUID dayComponentUuid) {
-    this.dayComponentUuid = dayComponentUuid;
+  public void setComponentUuid(UUID componentUuid) {
+    this.componentUuid = componentUuid;
   }
 
   @Override
@@ -88,12 +88,12 @@ public class DayComponentsMapperId {
     }
     DayComponentsMapperId dayComponentsMapperId = (DayComponentsMapperId) o;
     return Objects.equals(this.dayBlueprintUuid, dayComponentsMapperId.dayBlueprintUuid) &&
-        Objects.equals(this.dayComponentUuid, dayComponentsMapperId.dayComponentUuid);
+        Objects.equals(this.componentUuid, dayComponentsMapperId.componentUuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(dayBlueprintUuid, dayComponentUuid);
+    return Objects.hash(dayBlueprintUuid, componentUuid);
   }
 
   @Override
@@ -101,7 +101,7 @@ public class DayComponentsMapperId {
     StringBuilder sb = new StringBuilder();
     sb.append("class DayComponentsMapperId {\n");
     sb.append("    dayBlueprintUuid: ").append(toIndentedString(dayBlueprintUuid)).append("\n");
-    sb.append("    dayComponentUuid: ").append(toIndentedString(dayComponentUuid)).append("\n");
+    sb.append("    componentUuid: ").append(toIndentedString(componentUuid)).append("\n");
     sb.append("}");
     return sb.toString();
   }

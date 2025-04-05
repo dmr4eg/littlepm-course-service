@@ -47,12 +47,12 @@ public interface DayComponentsMapperApi {
      * DELETE /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Delete day-component mapping (admin only)
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
-     * @param dayComponentUuid Component UUID in the path (required)
+     * @param componentUuid Component UUID in the path (required)
      * @return No Content (status code 204)
      */
 
     @Operation(
-        operationId = "dayComponentsMapperDayBlueprintUuidDayComponentUuidDelete",
+        operationId = "dayComponentsMapperDayBlueprintUuidComponentUuidDelete",
         summary = "Delete day-component mapping (admin only)",
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
@@ -66,9 +66,9 @@ public interface DayComponentsMapperApi {
         value = "/day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}"
     )
     
-    default ResponseEntity<Void> dayComponentsMapperDayBlueprintUuidDayComponentUuidDelete(
+    default ResponseEntity<Void> dayComponentsMapperDayBlueprintUuidComponentUuidDelete(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
-        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID dayComponentUuid
+        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID componentUuid
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
@@ -79,11 +79,11 @@ public interface DayComponentsMapperApi {
      * GET /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Get a specific day-component mapping
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
-     * @param dayComponentUuid Component UUID in the path (required)
+     * @param componentUuid Component UUID in the path (required)
      * @return DayComponentsMapper (status code 200)
      */
     @Operation(
-        operationId = "dayComponentsMapperDayBlueprintUuidDayComponentUuidGet",
+        operationId = "dayComponentsMapperDayBlueprintUuidComponentUuidGet",
         summary = "Get a specific day-component mapping",
         responses = {
             @ApiResponse(responseCode = "200", description = "DayComponentsMapper", content = {
@@ -97,9 +97,9 @@ public interface DayComponentsMapperApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidDayComponentUuidGet(
+    default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidComponentUuidGet(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
-        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID dayComponentUuid
+        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID componentUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -119,12 +119,12 @@ public interface DayComponentsMapperApi {
      * PUT /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Update a day-component mapping (admin only)
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
-     * @param dayComponentUuid Component UUID in the path (required)
+     * @param componentUuid Component UUID in the path (required)
      * @param dayComponentsMapper  (required)
      * @return Updated mapping (status code 200)
      */
     @Operation(
-        operationId = "dayComponentsMapperDayBlueprintUuidDayComponentUuidPut",
+        operationId = "dayComponentsMapperDayBlueprintUuidComponentUuidPut",
         summary = "Update a day-component mapping (admin only)",
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated mapping", content = {
@@ -142,9 +142,9 @@ public interface DayComponentsMapperApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidDayComponentUuidPut(
+    default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidComponentUuidPut(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
-        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID dayComponentUuid,
+        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID componentUuid,
         @Parameter(name = "DayComponentsMapper", description = "", required = true) @Valid @RequestBody DayComponentsMapper dayComponentsMapper
     ) {
         getRequest().ifPresent(request -> {

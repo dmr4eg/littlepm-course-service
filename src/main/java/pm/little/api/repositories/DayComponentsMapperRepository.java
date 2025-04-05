@@ -14,4 +14,5 @@ import java.util.UUID;
 @RepositoryRestResource(exported = false)
 public interface DayComponentsMapperRepository extends JpaRepository<DayComponentsMapper, DayComponentsMapperId> {
     Page<DayComponentsMapper> findById_DayBlueprintUuid(UUID dayBlueprintUuid, Pageable pageable);
+    Page<DayComponentsMapper> findById_DayComponentUuid(UUID dayComponentUuid, Pageable pageable);
 }
