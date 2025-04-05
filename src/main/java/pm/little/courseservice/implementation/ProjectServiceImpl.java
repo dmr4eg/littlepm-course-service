@@ -10,10 +10,12 @@ import pm.little.api.models.dto.ProjectDTO;
 import pm.little.api.models.enums.StatusEnum;
 import pm.little.api.models.ids.ProjectDaysMapperId;
 import pm.little.api.models.ids.ProjectInstanceId;
+import pm.little.api.repositories.DayBlueprintRepository;
 import pm.little.api.repositories.ProjectBlueprintRepository;
 import pm.little.api.repositories.ProjectDaysMapperRepository;
 import pm.little.api.repositories.ProjectInstanceRepository;
 import pm.little.courseservice.ProjectService;
+import pm.little.courseservice.exceptions.DayBlueprintNotFoundException;
 import pm.little.courseservice.exceptions.ProjectBlueprintNotFoundException;
 import pm.little.courseservice.exceptions.ProjectDayNotFoundException;
 import pm.little.courseservice.exceptions.ProjectInstanceNotFoundException;
@@ -27,37 +29,39 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectBlueprintRepository projectBlueprintRepository;
     private final ProjectDaysMapperRepository projectDaysMapperRepository;
     private final ProjectInstanceRepository projectInstanceRepository;
+    private final DayBlueprintRepository dayBlueprintRepository;
 
     public ProjectServiceImpl(
             ProjectBlueprintRepository projectBlueprintRepository,
             ProjectDaysMapperRepository projectDaysMapperRepository,
-            ProjectInstanceRepository projectInstanceRepository
-    ) {
+            ProjectInstanceRepository projectInstanceRepository,
+            DayBlueprintRepository dayBlueprintRepository) {
         this.projectBlueprintRepository = projectBlueprintRepository;
         this.projectDaysMapperRepository = projectDaysMapperRepository;
         this.projectInstanceRepository = projectInstanceRepository;
+        this.dayBlueprintRepository = dayBlueprintRepository;
     }
 
-    private ProjectDTO toProjectDTO(ProjectInstance instance) {
+    private ProjectDTO toProjectDTO(ProjectInstance projectInstance) {
         // Grab the matching blueprint
-        UUID blueprintUuid = instance.getId().getProjectBlueprintUuid();
-        ProjectBlueprint blueprint = projectBlueprintRepository.findById(blueprintUuid)
-                .orElseThrow(() -> new ProjectBlueprintNotFoundException(blueprintUuid));
+        UUID projectBlueprintUuid = projectInstance.getId().getProjectBlueprintUuid();
+        ProjectBlueprint projectBlueprint = projectBlueprintRepository.findById(projectBlueprintUuid)
+                .orElseThrow(() -> new ProjectBlueprintNotFoundException(projectBlueprintUuid));
 
         // Build the DTO
         ProjectDTO dto = new ProjectDTO();
-        dto.setBlueprint(blueprint);
-        dto.setInstance(instance);
+        dto.setBlueprint(projectBlueprint);
+        dto.setInstance(projectInstance);
         return dto;
     }
 
     @Override
-    public ProjectBlueprint createProjectBlueprint(ProjectBlueprint blueprint) {
-        ProjectBlueprint existing = projectBlueprintRepository.findById(blueprint.getProjectBlueprintUuid()).orElse(null);
+    public ProjectBlueprint createProjectBlueprint(ProjectBlueprint projectBlueprint) {
+        ProjectBlueprint existing = projectBlueprintRepository.findById(projectBlueprint.getProjectBlueprintUuid()).orElse(null);
         if (existing != null) {
             return existing;
         }
-        return projectBlueprintRepository.save(blueprint);
+        return projectBlueprintRepository.save(projectBlueprint);
     }
 
     @Override
@@ -67,51 +71,67 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectBlueprint getProjectBlueprint(UUID projectUuid) {
-        if (!projectBlueprintRepository.existsById(projectUuid)) {
-            throw new ProjectBlueprintNotFoundException(projectUuid);
+    public ProjectBlueprint getProjectBlueprint(UUID projectBlueprintUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
         }
-        return projectBlueprintRepository.findById(projectUuid)
-                .orElseThrow(() -> new ProjectBlueprintNotFoundException(projectUuid));
+        return projectBlueprintRepository.findById(projectBlueprintUuid)
+                .orElseThrow(() -> new ProjectBlueprintNotFoundException(projectBlueprintUuid));
     }
 
     @Override
-    public ProjectBlueprint updateProjectBlueprint(UUID projectUuid, ProjectBlueprint updated) {
-        if (!projectBlueprintRepository.existsById(projectUuid)) {
-            throw new ProjectBlueprintNotFoundException(projectUuid);
+    public ProjectBlueprint updateProjectBlueprint(UUID projectBlueprintUuid, ProjectBlueprint projectBlueprintUpdated) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
         }
-        ProjectBlueprint existing = getProjectBlueprint(projectUuid);
-        existing.setTitle(updated.getTitle());
-        existing.setDescription(updated.getDescription());
-        existing.setDifficulty(updated.getDifficulty());
-        existing.setStyle(updated.getStyle());
-        existing.setPosterUrl(updated.getPosterUrl());
-        existing.setWelcomeVideoUrl(updated.getWelcomeVideoUrl());
+        ProjectBlueprint existing = getProjectBlueprint(projectBlueprintUuid);
+        existing.setTitle(projectBlueprintUpdated.getTitle());
+        existing.setDescription(projectBlueprintUpdated.getDescription());
+        existing.setDifficulty(projectBlueprintUpdated.getDifficulty());
+        existing.setStyle(projectBlueprintUpdated.getStyle());
+        existing.setPosterUrl(projectBlueprintUpdated.getPosterUrl());
+        existing.setWelcomeVideoUrl(projectBlueprintUpdated.getWelcomeVideoUrl());
         return projectBlueprintRepository.save(existing);
     }
 
     @Override
-    public void deleteProjectBlueprint(UUID projectUuid) {
-        if (!projectBlueprintRepository.existsById(projectUuid)) {
-            throw new ProjectBlueprintNotFoundException(projectUuid);
+    public void deleteProjectBlueprint(UUID projectBlueprintUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
         }
-        projectBlueprintRepository.deleteById(projectUuid);
+        projectBlueprintRepository.deleteById(projectBlueprintUuid);
     }
 
     // Project Days Mapper Operations
     @Override
-    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper mapping, int sortOrder) {
-        ProjectDaysMapper existing = projectDaysMapperRepository.findById(mapping.getId()).orElse(null);
+    public ProjectDaysMapper createProjectDayMapping(ProjectDaysMapper projectDaysMapper, int sortOrder) {
+        ProjectDaysMapperId projectDaysMapperId = projectDaysMapper.getId();
+        UUID projectBlueprintUuid = projectDaysMapperId.getProjectBlueprintUuid();
+        UUID dayBlueprintUuid = projectDaysMapperId.getDayBlueprintUuid();
+        // Check if the ProjectBlueprint and DayBlueprint exist
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        ProjectDaysMapper existing = projectDaysMapperRepository.findById(projectDaysMapper.getId()).orElse(null);
         if (existing != null) {
             return existing;
         }
-        mapping.setSortOrder(sortOrder);
-        return projectDaysMapperRepository.save(mapping);
+        projectDaysMapper.setSortOrder(sortOrder);
+        return projectDaysMapperRepository.save(projectDaysMapper);
     }
 
     @Override
-    public ProjectDaysMapper getProjectDayMapping(UUID projectUuid, UUID dayUuid) {
-        ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+    public ProjectDaysMapper getProjectDayMapping(UUID projectBlueprintUuid, UUID dayBlueprintUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        ProjectDaysMapperId id = new ProjectDaysMapperId(projectBlueprintUuid, dayBlueprintUuid);
         if (!projectDaysMapperRepository.existsById(id)) {
             throw new ProjectDayNotFoundException(id);
         }
@@ -120,14 +140,20 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDaysMapper> getProjectDayMappings(UUID projectUuid, int limit, int offset) {
+    public List<ProjectDaysMapper> getProjectDayMappings(UUID projectBlueprintUuid, int limit, int offset) {
         Pageable pageable = PageRequest.of(offset , limit);
-        return projectDaysMapperRepository.findById_ProjectBlueprintUuid(projectUuid, pageable).getContent();
+        return projectDaysMapperRepository.findById_ProjectBlueprintUuid(projectBlueprintUuid, pageable).getContent();
     }
 
     @Override
-    public int getProjectDayMappingsOrder(UUID projectUuid, UUID dayUuid) {
-        ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+    public int getProjectDayMappingsOrder(UUID projectBlueprintUuid, UUID dayBlueprintUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        ProjectDaysMapperId id = new ProjectDaysMapperId(projectBlueprintUuid, dayBlueprintUuid);
         if (!projectDaysMapperRepository.existsById(id)) {
             throw new ProjectDayNotFoundException(id);
         }
@@ -137,19 +163,31 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDaysMapper updateProjectDayMapping(UUID projectUuid, UUID dayUuid, ProjectDaysMapper updated) {
-        ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+    public ProjectDaysMapper updateProjectDayMapping(UUID projectBlueprintUuid, UUID dayBlueprintUuid, ProjectDaysMapper projectDaysMapperUpdated) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        ProjectDaysMapperId id = new ProjectDaysMapperId(projectBlueprintUuid, dayBlueprintUuid);
         if (!projectDaysMapperRepository.existsById(id)) {
             throw new ProjectDayNotFoundException(id);
         }
-        ProjectDaysMapper existing = getProjectDayMapping(projectUuid, dayUuid);
-        existing.setSortOrder(updated.getSortOrder());
+        ProjectDaysMapper existing = getProjectDayMapping(projectBlueprintUuid, dayBlueprintUuid);
+        existing.setSortOrder(projectDaysMapperUpdated.getSortOrder());
         return projectDaysMapperRepository.save(existing);
     }
 
     @Override
-    public void deleteProjectDayMapping(UUID projectUuid, UUID dayUuid) {
-        ProjectDaysMapperId id = new ProjectDaysMapperId(projectUuid, dayUuid);
+    public void deleteProjectDayMapping(UUID projectBlueprintUuid, UUID dayBlueprintUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        ProjectDaysMapperId id = new ProjectDaysMapperId(projectBlueprintUuid, dayBlueprintUuid);
         if (!projectDaysMapperRepository.existsById(id)) {
             throw new ProjectDayNotFoundException(id);
         }
@@ -158,20 +196,30 @@ public class ProjectServiceImpl implements ProjectService {
 
     // Project Instance Operations
     @Override
-    public ProjectDTO createProjectInstance(ProjectInstance instance) {
-        ProjectInstance existing = projectInstanceRepository.findById(instance.getId()).orElse(null);
-        // If it exists and is already IN_PROGRESS, return that
+    public ProjectDTO createProjectInstance(ProjectInstance projectInstance) {
+        ProjectInstanceId instanceId = projectInstance.getId();
+        UUID projectBlueprintUuid = instanceId.getProjectBlueprintUuid();
+
+        // Check if the ProjectBlueprint exists
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+
+        ProjectInstance existing = projectInstanceRepository.findById(instanceId).orElse(null);
         if (existing != null && existing.getStatus() == StatusEnum.IN_PROGRESS) {
             return toProjectDTO(existing);
         }
-        instance.setStatus(StatusEnum.IN_PROGRESS);
-        ProjectInstance saved = projectInstanceRepository.save(instance);
+        projectInstance.setStatus(StatusEnum.IN_PROGRESS);
+        ProjectInstance saved = projectInstanceRepository.save(projectInstance);
         return toProjectDTO(saved);
     }
 
     @Override
-    public ProjectDTO getProjectInstance(UUID projectUuid, UUID userUuid) {
-        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+    public ProjectDTO getProjectInstance(UUID projectBlueprintUuid, UUID userUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        ProjectInstanceId id = new ProjectInstanceId(projectBlueprintUuid, userUuid);
         ProjectInstance instance = projectInstanceRepository.findById(id)
                 .orElseThrow(() -> new ProjectInstanceNotFoundException(id));
         return toProjectDTO(instance);
@@ -196,44 +244,55 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDTO updateProjectInstance(UUID projectUuid, UUID userUuid, ProjectInstance updated) {
-        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+    public ProjectDTO updateProjectInstance(UUID projectBlueprintUuid, UUID userUuid, ProjectInstance projectInstanceUpdated) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        ProjectInstanceId id = new ProjectInstanceId(projectBlueprintUuid, userUuid);
         if (!projectInstanceRepository.existsById(id)) {
             throw new ProjectInstanceNotFoundException(id);
         }
         ProjectInstance existing = projectInstanceRepository.findById(id)
                 .orElseThrow(() -> new ProjectInstanceNotFoundException(id));
 
-        existing.setStatus(updated.getStatus());
-        existing.setStartDate(updated.getStartDate());
-        existing.setEndDate(updated.getEndDate());
-        existing.setFeedback(updated.getFeedback());
-        existing.setWhatWentWell(updated.getWhatWentWell());
+        existing.setStatus(projectInstanceUpdated.getStatus());
+        existing.setStartDate(projectInstanceUpdated.getStartDate());
+        existing.setEndDate(projectInstanceUpdated.getEndDate());
+        existing.setFeedback(projectInstanceUpdated.getFeedback());
+        existing.setWhatWentWell(projectInstanceUpdated.getWhatWentWell());
 
         ProjectInstance saved = projectInstanceRepository.save(existing);
         return toProjectDTO(saved);
     }
 
     @Override
-    public void deleteProjectInstance(UUID projectUuid, UUID userUuid) {
-        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+    public void deleteProjectInstance(UUID projectBlueprintUuid, UUID userUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        ProjectInstanceId id = new ProjectInstanceId(projectBlueprintUuid, userUuid);
         if (!projectInstanceRepository.existsById(id)) {
             throw new ProjectInstanceNotFoundException(id);
         }
         projectInstanceRepository.deleteById(id);
     }
 
-    // If you already had getProjectDTO(...) in your interface:
     @Override
-    public ProjectDTO getProjectDTO(UUID projectUuid, UUID userUuid) {
-        ProjectBlueprint blueprint = getProjectBlueprint(projectUuid);
-        ProjectInstance instance = getProjectInstanceRaw(projectUuid, userUuid);
-        return new ProjectDTO(blueprint, instance);
+    public ProjectDTO getProjectDTO(UUID projectBlueprintUuid, UUID userUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        ProjectBlueprint projectBlueprint = getProjectBlueprint(projectBlueprintUuid);
+        ProjectInstance projectInstance = getProjectInstanceRaw(projectBlueprintUuid, userUuid);
+        return new ProjectDTO(projectBlueprint, projectInstance);
     }
 
     // Helper method to fetch raw instance for internal usage
-    private ProjectInstance getProjectInstanceRaw(UUID projectUuid, UUID userUuid) {
-        ProjectInstanceId id = new ProjectInstanceId(projectUuid, userUuid);
+    private ProjectInstance getProjectInstanceRaw(UUID projectBlueprintUuid, UUID userUuid) {
+        if (!projectBlueprintRepository.existsById(projectBlueprintUuid)) {
+            throw new ProjectBlueprintNotFoundException(projectBlueprintUuid);
+        }
+        ProjectInstanceId id = new ProjectInstanceId(projectBlueprintUuid, userUuid);
         return projectInstanceRepository.findById(id)
                 .orElseThrow(() -> new ProjectInstanceNotFoundException(id));
     }

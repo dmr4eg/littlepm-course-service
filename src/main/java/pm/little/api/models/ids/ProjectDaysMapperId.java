@@ -29,6 +29,14 @@ public class ProjectDaysMapperId {
     super();
   }
 
+  public UUID getProjectBlueprintUuid() {
+    return projectBlueprintUuid;
+  }
+
+  public UUID getDayBlueprintUuid() {
+    return dayBlueprintUuid;
+  }
+
   /**
    * Constructor with only required parameters
    */
