@@ -109,6 +109,9 @@ public class DayServiceImpl implements DayService {
         if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
             throw new DayBlueprintNotFoundException(dayBlueprintUuid);
         }
+        if (!dayComponentsMapperRepository.existsById_ComponentUuid(componentUuid)) {
+            throw new DayComponentNotFoundException(componentUuid);
+        }
         DayComponentsMapper existing = dayComponentsMapperRepository.findById(dayComponentsMapper.getId()).orElse(null);
         if (existing != null) {
             return existing;
@@ -121,6 +124,9 @@ public class DayServiceImpl implements DayService {
     public DayComponentsMapper getDayComponentMapping(UUID dayBlueprintUuid, UUID componentUuid) {
         if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
             throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        if (!dayComponentsMapperRepository.existsById_ComponentUuid(componentUuid)) {
+            throw new DayComponentNotFoundException(componentUuid);
         }
         DayComponentsMapperId id = new DayComponentsMapperId(dayBlueprintUuid, componentUuid);
         if (!dayComponentsMapperRepository.existsById(id)) {
@@ -138,6 +144,12 @@ public class DayServiceImpl implements DayService {
 
     @Override
     public DayComponentsMapper updateDayComponentMapping(UUID dayBlueprintUuid, UUID componentUuid, DayComponentsMapper updated) {
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        if (!dayComponentsMapperRepository.existsById_ComponentUuid(componentUuid)) {
+            throw new DayComponentNotFoundException(componentUuid);
+        }
         DayComponentsMapperId id = new DayComponentsMapperId(dayBlueprintUuid, componentUuid);
         if (!dayComponentsMapperRepository.existsById(id)) {
             throw new DayComponentNotFoundException(id);
@@ -149,6 +161,12 @@ public class DayServiceImpl implements DayService {
 
     @Override
     public void deleteDayComponentMapping(UUID dayBlueprintUuid, UUID componentUuid) {
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
+        if (!dayComponentsMapperRepository.existsById_ComponentUuid(componentUuid)) {
+            throw new DayComponentNotFoundException(componentUuid);
+        }
         DayComponentsMapperId id = new DayComponentsMapperId(dayBlueprintUuid, componentUuid);
         if (!dayComponentsMapperRepository.existsById(id)) {
             throw new DayComponentNotFoundException(id);
@@ -158,6 +176,11 @@ public class DayServiceImpl implements DayService {
 
     @Override
     public DayDTO createDayInstance(DayInstance dayInstance) {
+        DayInstanceId id = dayInstance.getId();
+        UUID dayBlueprintUuid = id.getDayBlueprintUuid();
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
         DayInstance existing = dayInstanceRepository.findById(dayInstance.getId()).orElse(null);
         // If it already exists with status IN_PROGRESS, return that same thing
         if (existing != null && existing.getStatus() == StatusEnum.IN_PROGRESS) {
@@ -171,6 +194,9 @@ public class DayServiceImpl implements DayService {
 
     @Override
     public DayDTO getDayInstance(UUID dayBlueprintUuid, UUID userUuid) {
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
         DayInstanceId id = new DayInstanceId(dayBlueprintUuid, userUuid);
         DayInstance dayInstance = dayInstanceRepository.findById(id)
                 .orElseThrow(() -> new DayInstanceNotFoundException(id));
@@ -189,6 +215,9 @@ public class DayServiceImpl implements DayService {
 
     @Override
     public DayDTO updateDayInstance(UUID dayBlueprintUuid, UUID userUuid, DayInstance dayInstanceUpdated) {
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
         DayInstanceId id = new DayInstanceId(dayBlueprintUuid, userUuid);
         if (!dayInstanceRepository.existsById(id)) {
             throw new DayInstanceNotFoundException(id);
@@ -205,6 +234,9 @@ public class DayServiceImpl implements DayService {
 
     @Override
     public void deleteDayInstance(UUID dayBlueprintUuid, UUID userUuid) {
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
         DayInstanceId id = new DayInstanceId(dayBlueprintUuid, userUuid);
         if (!dayInstanceRepository.existsById(id)) {
             throw new DayInstanceNotFoundException(id);
@@ -214,12 +246,18 @@ public class DayServiceImpl implements DayService {
 
     @Override
     public DayDTO getDayDTO(UUID dayBlueprintUuid, UUID userUuid) {
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
         DayBlueprint dayBlueprint = getDayBlueprint(dayBlueprintUuid);
         DayInstance dayInstance = getDayInstanceRaw(dayBlueprintUuid, userUuid);
         return new DayDTO(dayBlueprint, dayInstance);
     }
 
     private DayInstance getDayInstanceRaw(UUID dayBlueprintUuid, UUID userUuid) {
+        if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
+            throw new DayBlueprintNotFoundException(dayBlueprintUuid);
+        }
         DayInstanceId id = new DayInstanceId(dayBlueprintUuid, userUuid);
         return dayInstanceRepository.findById(id)
                 .orElseThrow(() -> new DayInstanceNotFoundException(id));
