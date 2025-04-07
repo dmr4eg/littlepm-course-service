@@ -52,9 +52,10 @@ public class DayComponentsMapper {
   /**
    * Constructor with only required parameters
    */
-  public DayComponentsMapper(DayComponentsMapperId id, TypeEnum type) {
+  public DayComponentsMapper(DayComponentsMapperId id, TypeEnum type, Integer sortOrder) {
     this.id = id;
     this.type = type;
+    this.sortOrder = sortOrder;
   }
 
   public DayComponentsMapper id(DayComponentsMapperId id) {
@@ -66,7 +67,7 @@ public class DayComponentsMapper {
    * Get id
    * @return id
    */
-  @NotNull @Valid
+  @NotNull @Valid 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public DayComponentsMapperId getId() {
@@ -107,12 +108,13 @@ public class DayComponentsMapper {
     }
     DayComponentsMapper dayComponentsMapper = (DayComponentsMapper) o;
     return Objects.equals(this.id, dayComponentsMapper.id) &&
-        Objects.equals(this.type, dayComponentsMapper.type);
+        Objects.equals(this.type, dayComponentsMapper.type) &&
+        Objects.equals(this.sortOrder, dayComponentsMapper.sortOrder);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type);
+    return Objects.hash(id, type, sortOrder);
   }
 
   @Override
@@ -121,6 +123,7 @@ public class DayComponentsMapper {
     sb.append("class DayComponentsMapper {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    sortOrder: ").append(toIndentedString(sortOrder)).append("\n");
     sb.append("}");
     return sb.toString();
   }

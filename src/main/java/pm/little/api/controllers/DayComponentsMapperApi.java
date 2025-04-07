@@ -44,13 +44,12 @@ public interface DayComponentsMapperApi {
     }
 
     /**
-     * DELETE /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Delete day-component mapping (admin only)
+     * DELETE /day-components-mapper/{day_blueprint_uuid}/{component_uuid} : Delete day-component mapping (admin only)
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
      * @param componentUuid Component UUID in the path (required)
      * @return No Content (status code 204)
      */
-
     @Operation(
         operationId = "dayComponentsMapperDayBlueprintUuidComponentUuidDelete",
         summary = "Delete day-component mapping (admin only)",
@@ -63,12 +62,12 @@ public interface DayComponentsMapperApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}"
+        value = "/day-components-mapper/{day_blueprint_uuid}/{component_uuid}"
     )
     
     default ResponseEntity<Void> dayComponentsMapperDayBlueprintUuidComponentUuidDelete(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
-        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID componentUuid
+        @Parameter(name = "component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("component_uuid") UUID componentUuid
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
@@ -76,7 +75,7 @@ public interface DayComponentsMapperApi {
 
 
     /**
-     * GET /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Get a specific day-component mapping
+     * GET /day-components-mapper/{day_blueprint_uuid}/{component_uuid} : Get a specific day-component mapping
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
      * @param componentUuid Component UUID in the path (required)
@@ -93,18 +92,18 @@ public interface DayComponentsMapperApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}",
+        value = "/day-components-mapper/{day_blueprint_uuid}/{component_uuid}",
         produces = { "application/json" }
     )
     
     default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidComponentUuidGet(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
-        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID componentUuid
+        @Parameter(name = "component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("component_uuid") UUID componentUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
+                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -116,7 +115,7 @@ public interface DayComponentsMapperApi {
 
 
     /**
-     * PUT /day-components-mapper/{day_blueprint_uuid}/{day_component_uuid} : Update a day-component mapping (admin only)
+     * PUT /day-components-mapper/{day_blueprint_uuid}/{component_uuid} : Update a day-component mapping (admin only)
      *
      * @param dayBlueprintUuid The UUID of the day blueprint (required)
      * @param componentUuid Component UUID in the path (required)
@@ -137,20 +136,20 @@ public interface DayComponentsMapperApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/day-components-mapper/{day_blueprint_uuid}/{day_component_uuid}",
+        value = "/day-components-mapper/{day_blueprint_uuid}/{component_uuid}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
     default ResponseEntity<DayComponentsMapper> dayComponentsMapperDayBlueprintUuidComponentUuidPut(
         @Parameter(name = "day_blueprint_uuid", description = "The UUID of the day blueprint", required = true, in = ParameterIn.PATH) @PathVariable("day_blueprint_uuid") UUID dayBlueprintUuid,
-        @Parameter(name = "day_component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("day_component_uuid") UUID componentUuid,
+        @Parameter(name = "component_uuid", description = "Component UUID in the path", required = true, in = ParameterIn.PATH) @PathVariable("component_uuid") UUID componentUuid,
         @Parameter(name = "DayComponentsMapper", description = "", required = true) @Valid @RequestBody DayComponentsMapper dayComponentsMapper
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
+                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -190,7 +189,7 @@ public interface DayComponentsMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }, { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" } ]";
+                    String exampleString = "[ { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }, { \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -232,7 +231,7 @@ public interface DayComponentsMapperApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"day_component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
+                    String exampleString = "{ \"id\" : { \"day_blueprint_uuid\" : \"665c599d-5c8d-4d20-aaab-7ffaba150606\", \"component_uuid\" : \"a8494f64-0987-4dd0-8405-df19eb58f2ab\" }, \"type\" : \"TASK\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

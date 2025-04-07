@@ -68,8 +68,8 @@ public class DayComponentsMapperId {
    * @return componentUuid
    */
   @NotNull @Valid 
-  @Schema(name = "day_component_uuid", description = "UUID for a Day Component", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("day_component_uuid")
+  @Schema(name = "component_uuid", description = "UUID for a Day Component", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("component_uuid")
   public UUID getComponentUuid() {
     return componentUuid;
   }
