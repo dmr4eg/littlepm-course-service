@@ -143,6 +143,12 @@ public class DayServiceImpl implements DayService {
     }
 
     @Override
+    public List<DayComponentsMapper> getDayComponentMappings(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        return dayComponentsMapperRepository.findAll(pageable).getContent();
+    }
+
+    @Override
     public DayComponentsMapper updateDayComponentMapping(UUID dayBlueprintUuid, UUID componentUuid, DayComponentsMapper updated) {
         if (!dayBlueprintRepository.existsById(dayBlueprintUuid)) {
             throw new DayBlueprintNotFoundException(dayBlueprintUuid);

@@ -34,6 +34,8 @@ public interface DayService  {
 
     public List<DayComponentsMapper> getDayComponentMappings(UUID dayUuid, int limit, int offset)  ;
 
+    public List<DayComponentsMapper> getDayComponentMappings(int limit, int offset)  ;
+
     public DayComponentsMapper updateDayComponentMapping(UUID dayUuid, UUID componentUuid, DayComponentsMapper updated)  ;
 
     public void deleteDayComponentMapping(UUID dayUuid, UUID componentUuid)  ;

@@ -40,7 +40,6 @@ public class ProjectsApiController implements ProjectsApi {
      */
     @Override
     public ResponseEntity<List<ProjectBlueprint>> projectsGet(Integer limit, Integer offset) {
-        // Call your ProjectService to fetch a paginated list
         List<ProjectBlueprint> blueprints = projectService.getAllProjectBlueprints(limit, offset);
         return ResponseEntity.ok(blueprints);
     }
@@ -50,7 +49,6 @@ public class ProjectsApiController implements ProjectsApi {
      */
     @Override
     public ResponseEntity<ProjectBlueprint> projectsPost(ProjectBlueprint projectBlueprint) {
-        // Create a new ProjectBlueprint
         ProjectBlueprint created = projectService.createProjectBlueprint(projectBlueprint);
         return ResponseEntity.ok(created);
     }

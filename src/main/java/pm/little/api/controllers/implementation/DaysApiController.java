@@ -37,35 +37,30 @@ public class DaysApiController implements DaysApi {
 
     @Override
     public ResponseEntity<Void> daysDayBlueprintUuidDelete(UUID dayBlueprintUuid) {
-        // Delete an existing DayBlueprint
         dayService.deleteDayBlueprint(dayBlueprintUuid);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     public ResponseEntity<DayBlueprint> daysDayBlueprintUuidGet(UUID dayBlueprintUuid) {
-        // Get details of a single DayBlueprint
         DayBlueprint blueprint = dayService.getDayBlueprint(dayBlueprintUuid);
         return ResponseEntity.ok(blueprint);
     }
 
     @Override
     public ResponseEntity<DayBlueprint> daysDayBlueprintUuidPut(UUID dayBlueprintUuid, DayBlueprint dayBlueprint) {
-        // Update an existing DayBlueprint
         DayBlueprint updated = dayService.updateDayBlueprint(dayBlueprintUuid, dayBlueprint);
         return ResponseEntity.ok(updated);
     }
 
     @Override
     public ResponseEntity<List<DayBlueprint>> daysGet(Integer limit, Integer offset) {
-        // List all DayBlueprints (with pagination)
         List<DayBlueprint> list = dayService.getAllDayBlueprints(limit, offset);
         return ResponseEntity.ok(list);
     }
 
     @Override
     public ResponseEntity<DayBlueprint> daysPost(DayBlueprint dayBlueprint) {
-        // Create a new DayBlueprint
         DayBlueprint created = dayService.createDayBlueprint(dayBlueprint);
         return ResponseEntity.ok(created);
     }

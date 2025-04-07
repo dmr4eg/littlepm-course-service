@@ -75,11 +75,11 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
     /**
      * GET /day-components-mapper (list all mappings)
      */
-//    @Override
-//    public ResponseEntity<List<DayComponentsMapper>> dayComponentsMapperGet(Integer limit, Integer offset) {
-//        List<DayComponentsMapper> list = dayService.getAllDayComponentMappings(limit, offset);
-//        return ResponseEntity.ok(list);
-//    }
+    @Override
+    public ResponseEntity<List<DayComponentsMapper>> dayComponentsMapperGet(Integer limit, Integer offset) {
+        List<DayComponentsMapper> list = dayService.getDayComponentMappings(limit, offset);
+        return ResponseEntity.ok(list);
+    }
 
     /**
      * POST /day-components-mapper (create a new mapping)

@@ -42,13 +42,7 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
      */
     @Override
     public ResponseEntity<List<ProjectDTO>> projectInstancesGet(Integer limit, Integer offset, UUID userUuid) {
-        // For example, if you want to return *all* project instances:
-        //   List<ProjectDTO> dtos = projectService.getAllProjectInstancesAsDTO(limit, offset);
-        // Or if you want to return only the user’s project instances:
-        //   List<ProjectDTO> dtos = projectService.getUserProjectInstancesAsDTO(userUuid, limit, offset);
-        //
-        // For now, suppose we return all (or you can adjust):
-        List<ProjectDTO> dtos = projectService.getAllProjectInstancesAsDTO(limit, offset);
+        List<ProjectDTO> dtos = projectService.getUserProjectInstancesAsDTO(userUuid, limit, offset);
         return ResponseEntity.ok(dtos);
     }
 

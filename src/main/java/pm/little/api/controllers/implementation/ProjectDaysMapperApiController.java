@@ -37,23 +37,9 @@ public class ProjectDaysMapperApiController implements ProjectDaysMapperApi {
 
     /**
      * GET /project-days-mapper?limit=...&offset=...
-     *
-     * If you need to list *all* project-day mappings across *all* projects,
-     * you either need a new service method (e.g. getAllProjectDayMappings)
-     * or call the repository directly. Here we assume you added the method:
-     *   List<ProjectDaysMapper> getAllProjectDayMappings(int limit, int offset);
-     * in your ProjectService.
      */
     @Override
     public ResponseEntity<List<ProjectDaysMapper>> projectDaysMapperGet(Integer limit, Integer offset) {
-        // Example if your service supports it:
-        // List<ProjectDaysMapper> list = projectService.getAllProjectDayMappings(limit, offset);
-        // return ResponseEntity.ok(list);
-
-        // If not implemented, you can return 501 or something:
-        // return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-        // For demonstration, assume service method is there:
         List<ProjectDaysMapper> list = projectService.getAllProjectDayMappings(limit, offset);
         return ResponseEntity.ok(list);
     }
@@ -63,7 +49,6 @@ public class ProjectDaysMapperApiController implements ProjectDaysMapperApi {
      */
     @Override
     public ResponseEntity<ProjectDaysMapper> projectDaysMapperPost(ProjectDaysMapper projectDaysMapper) {
-        // The 'order' field must come from the ProjectDaysMapper object's 'order'
         ProjectDaysMapper created = projectService.createProjectDayMapping(projectDaysMapper, projectDaysMapper.getSortOrder());
         return ResponseEntity.ok(created);
     }
