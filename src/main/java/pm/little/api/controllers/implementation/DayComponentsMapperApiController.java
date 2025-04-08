@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 import pm.little.api.controllers.DayComponentsMapperApi;
 import pm.little.api.models.DayComponentsMapper;
+import pm.little.api.models.ids.DayComponentsMapperId;
 import pm.little.courseservice.DayService;
 
 import java.util.List;
@@ -43,6 +44,9 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
             UUID dayBlueprintUuid,
             UUID componentUuid
     ) {
+        if (dayBlueprintUuid == null || componentUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         dayService.deleteDayComponentMapping(dayBlueprintUuid, componentUuid);
         return ResponseEntity.noContent().build();
     }
@@ -55,6 +59,9 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
             UUID dayBlueprintUuid,
             UUID componentUuid
     ) {
+        if (dayBlueprintUuid == null || componentUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         DayComponentsMapper mapping = dayService.getDayComponentMapping(dayBlueprintUuid, componentUuid);
         return ResponseEntity.ok(mapping);
     }
@@ -68,6 +75,9 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
             UUID componentUuid,
             DayComponentsMapper dayComponentsMapper
     ) {
+        if (dayBlueprintUuid == null || componentUuid == null || dayComponentsMapper == null) {
+            return ResponseEntity.badRequest().build();
+        }
         DayComponentsMapper updated = dayService.updateDayComponentMapping(dayBlueprintUuid, componentUuid, dayComponentsMapper);
         return ResponseEntity.ok(updated);
     }
@@ -77,6 +87,9 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
      */
     @Override
     public ResponseEntity<List<DayComponentsMapper>> dayComponentsMapperGet(Integer limit, Integer offset) {
+        if (limit == null || offset == null) {
+            return ResponseEntity.badRequest().build();
+        }
         List<DayComponentsMapper> list = dayService.getDayComponentMappings(limit, offset);
         return ResponseEntity.ok(list);
     }
@@ -86,8 +99,10 @@ public class DayComponentsMapperApiController implements DayComponentsMapperApi 
      */
     @Override
     public ResponseEntity<DayComponentsMapper> dayComponentsMapperPost(DayComponentsMapper dayComponentsMapper) {
-        // If your logic requires an "order" integer (like in createDayComponentMapping),
-        // you might pass a default order or adapt the model to accept one:
+        DayComponentsMapperId id = dayComponentsMapper.getId();
+        if (id == null || id.getDayBlueprintUuid() == null || id.getComponentUuid() == null || dayComponentsMapper == null) {
+            return ResponseEntity.badRequest().build();
+        }
         final int defaultOrder = 0;
         DayComponentsMapper created = dayService.createDayComponentMapping(dayComponentsMapper, defaultOrder);
         return ResponseEntity.ok(created);

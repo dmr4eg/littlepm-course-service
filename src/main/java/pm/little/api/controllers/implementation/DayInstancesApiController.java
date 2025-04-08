@@ -8,6 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import pm.little.api.controllers.DayInstancesApi;
 import pm.little.api.models.DayInstance;
 import pm.little.api.models.dto.DayDTO;
+import pm.little.api.models.ids.DayInstanceId;
 import pm.little.courseservice.DayService;
 
 import java.util.List;
@@ -44,6 +45,9 @@ public class DayInstancesApiController implements DayInstancesApi {
             UUID dayBlueprintUuid,
             UUID userUuid
     ) {
+        if (dayBlueprintUuid == null || userUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         dayService.deleteDayInstance(dayBlueprintUuid, userUuid);
         return ResponseEntity.noContent().build();
     }
@@ -57,6 +61,9 @@ public class DayInstancesApiController implements DayInstancesApi {
             UUID dayBlueprintUuid,
             UUID userUuid
     ) {
+        if (dayBlueprintUuid == null || userUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         DayDTO dto = dayService.getDayInstance(dayBlueprintUuid, userUuid);
         return ResponseEntity.ok(dto);
     }
@@ -71,6 +78,9 @@ public class DayInstancesApiController implements DayInstancesApi {
             UUID userUuid,
             DayInstance dayInstance
     ) {
+        if (dayBlueprintUuid == null || userUuid == null || dayInstance == null) {
+            return ResponseEntity.badRequest().build();
+        }
         DayDTO updated = dayService.updateDayInstance(dayBlueprintUuid, userUuid, dayInstance);
         return ResponseEntity.ok(updated);
     }
@@ -85,6 +95,9 @@ public class DayInstancesApiController implements DayInstancesApi {
             Integer limit,
             Integer offset
     ) {
+        if (limit == null || offset == null || userUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         List<DayDTO> dtos = dayService.getUserDayInstancesAsDTO(userUuid, limit, offset);
         return ResponseEntity.ok(dtos);
     }
@@ -95,6 +108,10 @@ public class DayInstancesApiController implements DayInstancesApi {
      */
     @Override
     public ResponseEntity<DayDTO> dayInstancesPost(DayInstance dayInstance) {
+        DayInstanceId id = dayInstance.getId();
+        if (id == null || id.getDayBlueprintUuid() == null || id.getUserUuid() == null || dayInstance == null) {
+            return ResponseEntity.badRequest().build();
+        }
         DayDTO created = dayService.createDayInstance(dayInstance);
         return ResponseEntity.ok(created);
     }

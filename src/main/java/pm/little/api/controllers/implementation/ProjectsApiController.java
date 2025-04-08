@@ -40,6 +40,9 @@ public class ProjectsApiController implements ProjectsApi {
      */
     @Override
     public ResponseEntity<List<ProjectBlueprint>> projectsGet(Integer limit, Integer offset) {
+        if (limit == null || offset == null) {
+            return ResponseEntity.badRequest().build();
+        }
         List<ProjectBlueprint> blueprints = projectService.getAllProjectBlueprints(limit, offset);
         return ResponseEntity.ok(blueprints);
     }
@@ -49,6 +52,9 @@ public class ProjectsApiController implements ProjectsApi {
      */
     @Override
     public ResponseEntity<ProjectBlueprint> projectsPost(ProjectBlueprint projectBlueprint) {
+        if (projectBlueprint == null || projectBlueprint.getProjectBlueprintUuid() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectBlueprint created = projectService.createProjectBlueprint(projectBlueprint);
         return ResponseEntity.ok(created);
     }
@@ -58,6 +64,9 @@ public class ProjectsApiController implements ProjectsApi {
      */
     @Override
     public ResponseEntity<Void> projectsProjectBlueprintUuidDelete(UUID projectBlueprintUuid) {
+        if (projectBlueprintUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         projectService.deleteProjectBlueprint(projectBlueprintUuid);
         return ResponseEntity.noContent().build();
     }
@@ -67,6 +76,9 @@ public class ProjectsApiController implements ProjectsApi {
      */
     @Override
     public ResponseEntity<ProjectBlueprint> projectsProjectBlueprintUuidGet(UUID projectBlueprintUuid) {
+        if (projectBlueprintUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectBlueprint blueprint = projectService.getProjectBlueprint(projectBlueprintUuid);
         return ResponseEntity.ok(blueprint);
     }
@@ -79,6 +91,9 @@ public class ProjectsApiController implements ProjectsApi {
             UUID projectBlueprintUuid,
             ProjectBlueprint projectBlueprint
     ) {
+        if (projectBlueprintUuid == null || projectBlueprint == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectBlueprint updated = projectService.updateProjectBlueprint(projectBlueprintUuid, projectBlueprint);
         return ResponseEntity.ok(updated);
     }

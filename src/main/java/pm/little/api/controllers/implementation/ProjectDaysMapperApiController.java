@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
 import pm.little.api.controllers.ProjectDaysMapperApi;
 import pm.little.api.models.ProjectDaysMapper;
+import pm.little.api.models.ids.ProjectDaysMapperId;
 import pm.little.courseservice.ProjectService;
 
 import java.util.List;
@@ -40,6 +41,9 @@ public class ProjectDaysMapperApiController implements ProjectDaysMapperApi {
      */
     @Override
     public ResponseEntity<List<ProjectDaysMapper>> projectDaysMapperGet(Integer limit, Integer offset) {
+        if (limit == null || offset == null) {
+            return ResponseEntity.badRequest().build();
+        }
         List<ProjectDaysMapper> list = projectService.getAllProjectDayMappings(limit, offset);
         return ResponseEntity.ok(list);
     }
@@ -49,6 +53,11 @@ public class ProjectDaysMapperApiController implements ProjectDaysMapperApi {
      */
     @Override
     public ResponseEntity<ProjectDaysMapper> projectDaysMapperPost(ProjectDaysMapper projectDaysMapper) {
+        ProjectDaysMapperId id = projectDaysMapper.getId();
+        if (id == null || id.getProjectBlueprintUuid() == null || id.getDayBlueprintUuid() == null ||
+                projectDaysMapper.getSortOrder() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectDaysMapper created = projectService.createProjectDayMapping(projectDaysMapper, projectDaysMapper.getSortOrder());
         return ResponseEntity.ok(created);
     }
@@ -61,6 +70,9 @@ public class ProjectDaysMapperApiController implements ProjectDaysMapperApi {
             UUID projectBlueprintUuid,
             UUID dayBlueprintUuid
     ) {
+        if (projectBlueprintUuid == null || dayBlueprintUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         projectService.deleteProjectDayMapping(projectBlueprintUuid, dayBlueprintUuid);
         return ResponseEntity.noContent().build();
     }
@@ -73,6 +85,9 @@ public class ProjectDaysMapperApiController implements ProjectDaysMapperApi {
             UUID projectBlueprintUuid,
             UUID dayBlueprintUuid
     ) {
+        if (projectBlueprintUuid == null || dayBlueprintUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectDaysMapper mapping = projectService.getProjectDayMapping(projectBlueprintUuid, dayBlueprintUuid);
         return ResponseEntity.ok(mapping);
     }
@@ -86,6 +101,9 @@ public class ProjectDaysMapperApiController implements ProjectDaysMapperApi {
             UUID dayBlueprintUuid,
             ProjectDaysMapper projectDaysMapper
     ) {
+        if (projectBlueprintUuid == null || dayBlueprintUuid == null || projectDaysMapper == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectDaysMapper updated = projectService.updateProjectDayMapping(projectBlueprintUuid, dayBlueprintUuid, projectDaysMapper);
         return ResponseEntity.ok(updated);
     }

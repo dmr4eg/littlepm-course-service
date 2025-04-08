@@ -9,6 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import pm.little.api.controllers.ProjectInstancesApi;
 import pm.little.api.models.ProjectInstance;
 import pm.little.api.models.dto.ProjectDTO;
+import pm.little.api.models.ids.ProjectInstanceId;
 import pm.little.courseservice.ProjectService;
 
 import java.util.List;
@@ -42,6 +43,9 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
      */
     @Override
     public ResponseEntity<List<ProjectDTO>> projectInstancesGet(Integer limit, Integer offset, UUID userUuid) {
+        if (limit == null || offset == null || userUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         List<ProjectDTO> dtos = projectService.getUserProjectInstancesAsDTO(userUuid, limit, offset);
         return ResponseEntity.ok(dtos);
     }
@@ -52,6 +56,10 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
      */
     @Override
     public ResponseEntity<ProjectDTO> projectInstancesPost(ProjectInstance projectInstance) {
+        ProjectInstanceId id = projectInstance.getId();
+        if (id == null || id.getProjectBlueprintUuid() == null || id.getUserUuid() == null || projectInstance == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectDTO created = projectService.createProjectInstance(projectInstance);
         return ResponseEntity.ok(created);
     }
@@ -64,6 +72,9 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
             UUID projectBlueprintUuid,
             UUID userUuid
     ) {
+        if (projectBlueprintUuid == null || userUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         projectService.deleteProjectInstance(projectBlueprintUuid, userUuid);
         return ResponseEntity.noContent().build();
     }
@@ -77,6 +88,9 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
             UUID projectBlueprintUuid,
             UUID userUuid
     ) {
+        if (projectBlueprintUuid == null || userUuid == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectDTO dto = projectService.getProjectInstance(projectBlueprintUuid, userUuid);
         return ResponseEntity.ok(dto);
     }
@@ -91,6 +105,9 @@ public class ProjectInstancesApiController implements ProjectInstancesApi {
             UUID userUuid,
             ProjectInstance projectInstance
     ) {
+        if (projectBlueprintUuid == null || userUuid == null || projectInstance == null) {
+            return ResponseEntity.badRequest().build();
+        }
         ProjectDTO updated = projectService.updateProjectInstance(projectBlueprintUuid, userUuid, projectInstance);
         return ResponseEntity.ok(updated);
     }
