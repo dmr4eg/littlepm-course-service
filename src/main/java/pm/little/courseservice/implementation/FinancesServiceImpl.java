@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pm.little.api.models.Finances;
 import pm.little.api.models.ids.FinancesId;
 import pm.little.api.repositories.FinancesRepository;
-import pm.little.financesservice.FinancesService;
-import pm.little.financesservice.exceptions.*;
+import pm.little.courseservice.FinancesService;
+import pm.little.courseservice.exceptions.*;
 
 import java.util.List;
 import java.util.UUID;
