@@ -37,11 +37,23 @@ public class DayComponentsMapper {
   @Column(name = "sortOrder")
   private Integer sortOrder;
 
-  public @NotNull Integer getSortOrder() {
+  public DayComponentsMapper sortOrder(Integer sortOrder) {
+    this.sortOrder = sortOrder;
+    return this;
+  }
+
+  /**
+   * Order or position within a list
+   * @return sortOrder
+   */
+  @javax.validation.constraints.NotNull
+  @Schema(name = "sortOrder", description = "Order or position within a list", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("sortOrder")
+  public Integer getSortOrder() {
     return sortOrder;
   }
 
-  public void setSortOrder(@NotNull Integer sortOrder) {
+  public void setSortOrder(Integer sortOrder) {
     this.sortOrder = sortOrder;
   }
 

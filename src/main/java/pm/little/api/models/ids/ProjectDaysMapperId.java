@@ -29,14 +29,6 @@ public class ProjectDaysMapperId {
     super();
   }
 
-  public UUID getProjectBlueprintUuid() {
-    return projectBlueprintUuid;
-  }
-
-  public UUID getDayBlueprintUuid() {
-    return dayBlueprintUuid;
-  }
-
   /**
    * Constructor with only required parameters
    */
@@ -54,15 +46,14 @@ public class ProjectDaysMapperId {
    * UUID for a Project Blueprint
    * @return projectBlueprintUuid
    */
-  @NotNull
-  @Valid
-  @Schema(name = "project_blueprint", description = "UUID for a Project Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("project_blueprint")
-  public UUID getProjectBlueprint() {
+  @NotNull @Valid 
+  @Schema(name = "project_blueprint_uuid", description = "UUID for a Project Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("project_blueprint_uuid")
+  public UUID getProjectBlueprintUuid() {
     return projectBlueprintUuid;
   }
 
-  public void setProjectBlueprint(UUID projectBlueprintUuid) {
+  public void setProjectBlueprintUuid(UUID projectBlueprintUuid) {
     this.projectBlueprintUuid = projectBlueprintUuid;
   }
 
@@ -76,13 +67,13 @@ public class ProjectDaysMapperId {
    * @return dayBlueprintUuid
    */
   @NotNull @Valid 
-  @Schema(name = "dayBlueprintUuid", description = "UUID for a Day Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("dayBlueprintUuid")
-  public UUID getDay() {
+  @Schema(name = "day_blueprint_uuid", description = "UUID for a Day Blueprint", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("day_blueprint_uuid")
+  public UUID getDayBlueprintUuid() {
     return dayBlueprintUuid;
   }
 
-  public void setDay(UUID dayBlueprintUuid) {
+  public void setDayBlueprintUuid(UUID dayBlueprintUuid) {
     this.dayBlueprintUuid = dayBlueprintUuid;
   }
 
