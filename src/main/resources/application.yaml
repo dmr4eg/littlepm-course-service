@@ -1,6 +1,8 @@
 server:
   address: ${SPRING_HOST}
   port: ${SPRING_PORT}
+  servlet:
+    context-path: ${SERVICE_PATH}
 
 logging:
   level:
@@ -12,7 +14,7 @@ logging:
 
 spring:
   application:
-    name: littlepm-content-service
+    name: littlepm-course-service
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
@@ -33,8 +35,8 @@ file:
 
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    path: ${SERVICE_PATH}/swagger-ui.html
   api-docs:
-    path: /v3/api-docs
+    path: ${SERVICE_PATH}/v3/api-docs
     enabled: true
   show-actuator: true
