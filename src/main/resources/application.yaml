@@ -12,7 +12,7 @@ logging:
 
 spring:
   application:
-    name: nss-job-messages
+    name: littlepm-content-service
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
