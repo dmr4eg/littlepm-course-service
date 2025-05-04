@@ -1,8 +1,7 @@
 server:
   address: ${SPRING_HOST}
   port: ${SPRING_PORT}
-  servlet:
-    context-path: ${SERVICE_PATH}
+  forward-headers-strategy: framework
 
 logging:
   level:
@@ -35,8 +34,8 @@ file:
 
 springdoc:
   swagger-ui:
-    path: ${SERVICE_PATH}/swagger-ui.html
+    path: /swagger-ui.html
   api-docs:
-    path: ${SERVICE_PATH}/v3/api-docs
+    path: /v3/api-docs
     enabled: true
   show-actuator: true
