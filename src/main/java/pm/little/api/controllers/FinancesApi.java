@@ -43,6 +43,7 @@ public interface FinancesApi {
      *
      * @param limit Limit of the list (required)
      * @param offset Offset of the list (required)
+     * @param userUuid Filter list responses by user UUID (optional)
      * @return A list of Finances (status code 200)
      */
     @Operation(
@@ -66,7 +67,8 @@ public interface FinancesApi {
     
     default ResponseEntity<List<Finances>> financesGet(
         @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
-        @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset
+        @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset,
+        @Parameter(name = "user_uuid", description = "Filter list responses by user UUID", in = ParameterIn.QUERY) @Valid @RequestParam(value = "user_uuid", required = false) UUID userUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {

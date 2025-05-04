@@ -1,5 +1,7 @@
 package pm.little.courseservice.implementation;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pm.little.api.models.Finances;
@@ -64,32 +66,36 @@ public class FinancesServiceImpl implements FinancesService {
     }
 
     @Override
-    @Transactional
+    public List<Finances> getAllFinances(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        return financesRepository.findAll(pageable).getContent();
+    }
+
+    // this methods are not implemented yet
     public Finances calculateFinances(UUID projectBlueprintUuid, UUID userUuid) {
-        Finances finances = getFinancesById(projectBlueprintUuid, userUuid);
-        float profit = finances.getInvestorReturn() - finances.getInvestorGave();
-        finances.setProfit(profit);
-        float calculatedBudget = finances.getToysPlanned() > 0 ? (finances.getSpentBudget() / finances.getToysPlanned())
-                : 0;
-        finances.setCalculatedBudget(calculatedBudget);
-
-        if (finances.getItemsCost() > 0 && finances.getToysPlanned() > 0) {
-            float pricePerItem = (finances.getSpentBudget() + finances.getItemsCost()) / finances.getToysPlanned();
-            finances.setPricePerItem(pricePerItem);
-            finances.setRecommendedPrice(pricePerItem * 1.2f); // 20% markup example
-        }
-
-        return financesRepository.save(finances);
+//        Finances finances = getFinancesById(projectBlueprintUuid, userUuid);
+//        float profit = finances.getInvestorReturn() - finances.getInvestorGave();
+//        finances.setProfit(profit);
+//        float calculatedBudget = finances.getToysPlanned() > 0 ? (finances.getSpentBudget() / finances.getToysPlanned())
+//                : 0;
+//        finances.setCalculatedBudget(calculatedBudget);
+//
+//        if (finances.getItemsCost() > 0 && finances.getToysPlanned() > 0) {
+//            float pricePerItem = (finances.getSpentBudget() + finances.getItemsCost()) / finances.getToysPlanned();
+//            finances.setPricePerItem(pricePerItem);
+//            finances.setRecommendedPrice(pricePerItem * 1.2f); // 20% markup example
+//        }
+//
+//        return financesRepository.save(finances);
+        return null;
     }
 
     public void calculateDay1Costs(Finances finances) {
-        // // Parse quantity ranges (e.g., "5-7" → min/max)
         // int feathersMin =
         // Integer.parseInt(finances.getFeathersQuantityRange().split("-")[0]);
         // int feathersMax =
         // Integer.parseInt(finances.getFeathersQuantityRange().split("-")[1]);
         //
-        // // Calculate material costs (example for feathers)
         // BigDecimal avgFeathers = BigDecimal.valueOf((feathersMin + feathersMax) /
         // 2.0);
         // BigDecimal feathersCost = avgFeathers.multiply(finances.getFeathersCost());

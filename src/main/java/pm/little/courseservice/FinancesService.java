@@ -16,13 +16,5 @@ public interface FinancesService {
 
     public void deleteFinances(UUID projectBlueprintUuid, UUID userUuid) ;
 
-    public Finances calculateFinances(UUID projectBlueprintUuid, UUID userUuid) ;
-
-    public void calculateDay1Costs(Finances finances) ;
-
-    public void validateHelpers(Finances finances) ;
-
-    public void calculateInvestorReturn(Finances finances) ;
-
-    public void calculateRecommendedPrice(Finances finances) ;
+    public List<Finances> getAllFinances(int limit, int offset);
 }
