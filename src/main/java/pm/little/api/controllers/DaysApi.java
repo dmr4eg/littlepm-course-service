@@ -36,7 +36,7 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "days", description = "the days API")
+@Tag(name = "days", description = "APIs for managing day templates and their instances.")
 public interface DaysApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -52,6 +52,7 @@ public interface DaysApi {
     @Operation(
         operationId = "daysDayBlueprintUuidDelete",
         summary = "Delete day template (admin only)",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -81,6 +82,7 @@ public interface DaysApi {
     @Operation(
         operationId = "daysDayBlueprintUuidGet",
         summary = "Get day template details",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Day blueprint", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayBlueprint.class))
@@ -120,6 +122,7 @@ public interface DaysApi {
     @Operation(
         operationId = "daysDayBlueprintUuidPut",
         summary = "Update day template (admin only)",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated day blueprint", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayBlueprint.class))
@@ -164,6 +167,7 @@ public interface DaysApi {
     @Operation(
         operationId = "daysGet",
         summary = "List day templates",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of day blueprints", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DayBlueprint.class)))
@@ -203,6 +207,7 @@ public interface DaysApi {
     @Operation(
         operationId = "daysPost",
         summary = "Create day template (admin only)",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Created day blueprint", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayBlueprint.class))

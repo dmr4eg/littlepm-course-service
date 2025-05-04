@@ -36,7 +36,7 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "day-components-mapper", description = "the day-components-mapper API")
+@Tag(name = "days", description = "APIs for managing day templates and their instances.")
 public interface DayComponentsMapperApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -53,6 +53,7 @@ public interface DayComponentsMapperApi {
     @Operation(
         operationId = "dayComponentsMapperDayBlueprintUuidComponentUuidDelete",
         summary = "Delete day-component mapping (admin only)",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -84,6 +85,7 @@ public interface DayComponentsMapperApi {
     @Operation(
         operationId = "dayComponentsMapperDayBlueprintUuidComponentUuidGet",
         summary = "Get a specific day-component mapping",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "DayComponentsMapper", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayComponentsMapper.class))
@@ -125,6 +127,7 @@ public interface DayComponentsMapperApi {
     @Operation(
         operationId = "dayComponentsMapperDayBlueprintUuidComponentUuidPut",
         summary = "Update a day-component mapping (admin only)",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated mapping", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayComponentsMapper.class))
@@ -170,6 +173,7 @@ public interface DayComponentsMapperApi {
     @Operation(
         operationId = "dayComponentsMapperGet",
         summary = "List all day-component mappings",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of DayComponentsMapper", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DayComponentsMapper.class)))
@@ -209,6 +213,7 @@ public interface DayComponentsMapperApi {
     @Operation(
         operationId = "dayComponentsMapperPost",
         summary = "Create a new day-component mapping (admin only)",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Created day-component mapping", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayComponentsMapper.class))

@@ -36,7 +36,7 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "project-instances", description = "the project-instances API")
+@Tag(name = "projects", description = "APIs for managing projects, day templates, and user progress tracking.")
 public interface ProjectInstancesApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -48,12 +48,13 @@ public interface ProjectInstancesApi {
      *
      * @param limit Limit of the list (required)
      * @param offset Offset of the list (required)
-     * @param userUuid The UUID of the user (required)
+     * @param userUuid Filter list responses by user UUID (optional)
      * @return A list of ProjectInstance (status code 200)
      */
     @Operation(
         operationId = "projectInstancesGet",
         summary = "List all project instances",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of ProjectInstance", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectDTO.class)))
@@ -72,7 +73,7 @@ public interface ProjectInstancesApi {
     default ResponseEntity<List<ProjectDTO>> projectInstancesGet(
         @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
         @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset,
-        @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid
+        @Parameter(name = "user_uuid", description = "Filter list responses by user UUID", in = ParameterIn.QUERY) @Valid @RequestParam(value = "user_uuid", required = false) UUID userUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -97,6 +98,7 @@ public interface ProjectInstancesApi {
     @Operation(
         operationId = "projectInstancesPost",
         summary = "Create a new project instance (user)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Created project instance", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
@@ -140,6 +142,7 @@ public interface ProjectInstancesApi {
     @Operation(
         operationId = "projectInstancesProjectBlueprintUuidUserUuidDelete",
         summary = "Delete a project instance (admin or user)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -171,6 +174,7 @@ public interface ProjectInstancesApi {
     @Operation(
         operationId = "projectInstancesProjectBlueprintUuidUserUuidGet",
         summary = "Get a specific project instance",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "ProjectInstance", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
@@ -215,6 +219,7 @@ public interface ProjectInstancesApi {
     @Operation(
         operationId = "projectInstancesProjectBlueprintUuidUserUuidPut",
         summary = "Update a project instance (user)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated project instance", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))

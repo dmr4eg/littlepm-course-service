@@ -35,7 +35,7 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "members", description = "the members API")
+@Tag(name = "members", description = "APIs for managing members within projects.")
 public interface MembersApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -52,6 +52,7 @@ public interface MembersApi {
     @Operation(
         operationId = "membersGet",
         summary = "List all members records",
+        tags = { "members" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of Members", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Members.class)))
@@ -94,6 +95,7 @@ public interface MembersApi {
     @Operation(
         operationId = "membersPost",
         summary = "Create new members record",
+        tags = { "members" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Created members record", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Members.class))
@@ -137,6 +139,7 @@ public interface MembersApi {
     @Operation(
         operationId = "membersProjectBlueprintUuidUserUuidDelete",
         summary = "Delete a member record",
+        tags = { "members" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -168,6 +171,7 @@ public interface MembersApi {
     @Operation(
         operationId = "membersProjectBlueprintUuidUserUuidGet",
         summary = "Get one member record",
+        tags = { "members" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Members", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Members.class))
@@ -212,6 +216,7 @@ public interface MembersApi {
     @Operation(
         operationId = "membersProjectBlueprintUuidUserUuidPut",
         summary = "Update a member record",
+        tags = { "members" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated member", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Members.class))

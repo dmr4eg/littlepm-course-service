@@ -18,8 +18,8 @@ public class SpringDocConfiguration {
         return new OpenAPI()
                 .info(
                         new Info()
-                                .title("Project &amp; Day API")
-                                .description("An OpenAPI specification for project management, day templates, tasks, forms, media, and related user progress tracking.")
+                                .title("Course API")
+                                .description("API for managing projects, days, finances, and members.")
                                 .version("1.0.0")
                 )
                 .components(
@@ -35,6 +35,6 @@ public class SpringDocConfiguration {
                                         .bearerFormat("JWT")
                                 )
                 )
-                ;
+        ;
     }
 }

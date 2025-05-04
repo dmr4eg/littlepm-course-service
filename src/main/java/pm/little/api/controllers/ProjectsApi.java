@@ -37,7 +37,7 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-03-27T23:47:32.256351+01:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "projects", description = "the projects API")
+@Tag(name = "projects", description = "APIs for managing projects, day templates, and user progress tracking.")
 public interface ProjectsApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -54,6 +54,7 @@ public interface ProjectsApi {
     @Operation(
         operationId = "projectsGet",
         summary = "List project blueprints",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of project blueprints", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectBlueprint.class)))
@@ -93,6 +94,7 @@ public interface ProjectsApi {
     @Operation(
         operationId = "projectsPost",
         summary = "Create new project blueprint (admin only)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The created project blueprint", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
@@ -135,6 +137,7 @@ public interface ProjectsApi {
     @Operation(
         operationId = "projectsProjectBlueprintUuidDelete",
         summary = "Delete a project blueprint (admin only)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -164,6 +167,7 @@ public interface ProjectsApi {
     @Operation(
         operationId = "projectsProjectBlueprintUuidGet",
         summary = "Get project blueprint details",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Project blueprint", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))
@@ -203,6 +207,7 @@ public interface ProjectsApi {
     @Operation(
         operationId = "projectsProjectBlueprintUuidPut",
         summary = "Update an existing project blueprint (admin only)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated project blueprint", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectBlueprint.class))

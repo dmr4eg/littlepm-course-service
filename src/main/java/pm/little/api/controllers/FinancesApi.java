@@ -31,7 +31,7 @@ import java.util.UUID;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "finances", description = "the finances API")
+@Tag(name = "finances", description = "APIs for managing finances related to projects and users.")
 public interface FinancesApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -48,6 +48,7 @@ public interface FinancesApi {
     @Operation(
         operationId = "financesGet",
         summary = "List all finances records",
+        tags = { "finances" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of Finances", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Finances.class)))
@@ -90,6 +91,7 @@ public interface FinancesApi {
     @Operation(
         operationId = "financesPost",
         summary = "Create new finances record",
+        tags = { "finances" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Created finances", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Finances.class))
@@ -134,6 +136,7 @@ public interface FinancesApi {
     @Operation(
         operationId = "financesProjectBlueprintUuidUserUuidCalculatePut",
         summary = "Calculate or recalculate finances",
+        tags = { "finances" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Calculated finances", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Finances.class))
@@ -179,6 +182,7 @@ public interface FinancesApi {
     @Operation(
         operationId = "financesProjectBlueprintUuidUserUuidDelete",
         summary = "Delete finances record",
+        tags = { "finances" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -210,6 +214,7 @@ public interface FinancesApi {
     @Operation(
         operationId = "financesProjectBlueprintUuidUserUuidGet",
         summary = "Get finances record",
+        tags = { "finances" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Finances", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Finances.class))
@@ -254,6 +259,7 @@ public interface FinancesApi {
     @Operation(
         operationId = "financesProjectBlueprintUuidUserUuidPut",
         summary = "Update finances record",
+        tags = { "finances" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated finances", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Finances.class))

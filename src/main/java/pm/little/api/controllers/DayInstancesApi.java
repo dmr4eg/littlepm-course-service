@@ -36,7 +36,7 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "day-instances", description = "the day-instances API")
+@Tag(name = "days", description = "APIs for managing day templates and their instances.")
 public interface DayInstancesApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -53,6 +53,7 @@ public interface DayInstancesApi {
     @Operation(
         operationId = "dayInstancesDayBlueprintUuidUserUuidDelete",
         summary = "Delete a day instance",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -84,6 +85,7 @@ public interface DayInstancesApi {
     @Operation(
         operationId = "dayInstancesDayBlueprintUuidUserUuidGet",
         summary = "Get a specific day instance",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "DayInstance", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayDTO.class))
@@ -128,6 +130,7 @@ public interface DayInstancesApi {
     @Operation(
         operationId = "dayInstancesDayBlueprintUuidUserUuidPut",
         summary = "Update a day instance",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated day instance", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayDTO.class))
@@ -166,14 +169,15 @@ public interface DayInstancesApi {
     /**
      * GET /day-instances : List all day instances
      *
-     * @param userUuid The UUID of the user (required)
      * @param limit Limit of the list (required)
      * @param offset Offset of the list (required)
+     * @param userUuid Filter list responses by user UUID (optional)
      * @return A list of DayInstance (status code 200)
      */
     @Operation(
         operationId = "dayInstancesGet",
         summary = "List all day instances",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of DayInstance", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DayDTO.class)))
@@ -190,9 +194,9 @@ public interface DayInstancesApi {
     )
     
     default ResponseEntity<List<DayDTO>> dayInstancesGet(
-        @Parameter(name = "user_uuid", description = "The UUID of the user", required = true, in = ParameterIn.PATH) @PathVariable("user_uuid") UUID userUuid,
         @NotNull @Parameter(name = "limit", description = "Limit of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "limit", required = true) Integer limit,
-        @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset
+        @NotNull @Parameter(name = "offset", description = "Offset of the list", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "offset", required = true) Integer offset,
+        @Parameter(name = "user_uuid", description = "Filter list responses by user UUID", in = ParameterIn.QUERY) @Valid @RequestParam(value = "user_uuid", required = false) UUID userUuid
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -217,6 +221,7 @@ public interface DayInstancesApi {
     @Operation(
         operationId = "dayInstancesPost",
         summary = "Create a day instance",
+        tags = { "days" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Created day instance", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = DayDTO.class))

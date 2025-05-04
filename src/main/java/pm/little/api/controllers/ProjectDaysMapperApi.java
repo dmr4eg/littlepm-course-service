@@ -35,7 +35,7 @@ import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-04-04T00:03:08.519382+02:00[Europe/Prague]", comments = "Generator version: 7.11.0")
 @Validated
-@Tag(name = "project-days-mapper", description = "the project-days-mapper API")
+@Tag(name = "projects", description = "APIs for managing projects, day templates, and user progress tracking.")
 public interface ProjectDaysMapperApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -52,6 +52,7 @@ public interface ProjectDaysMapperApi {
     @Operation(
         operationId = "projectDaysMapperGet",
         summary = "List all project-day mappings",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of ProjectDaysMapper", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectDaysMapper.class)))
@@ -91,6 +92,7 @@ public interface ProjectDaysMapperApi {
     @Operation(
         operationId = "projectDaysMapperPost",
         summary = "Create a new project-day mapping (admin only)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Created project-day mapping", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDaysMapper.class))
@@ -134,6 +136,7 @@ public interface ProjectDaysMapperApi {
     @Operation(
         operationId = "projectDaysMapperProjectBlueprintUuidDayBlueprintUuidDelete",
         summary = "Delete project-day mapping (admin only)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         },
@@ -165,6 +168,7 @@ public interface ProjectDaysMapperApi {
     @Operation(
         operationId = "projectDaysMapperProjectBlueprintUuidDayBlueprintUuidGet",
         summary = "Get a specific project-day mapping",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A single ProjectDaysMapper", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDaysMapper.class))
@@ -206,6 +210,7 @@ public interface ProjectDaysMapperApi {
     @Operation(
         operationId = "projectDaysMapperProjectBlueprintUuidDayBlueprintUuidPut",
         summary = "Update a specific project-day mapping (admin only)",
+        tags = { "projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Updated mapping", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDaysMapper.class))
