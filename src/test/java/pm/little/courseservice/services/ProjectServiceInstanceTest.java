@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pm.little.api.models.ProjectBlueprint;
 import pm.little.api.models.ProjectInstance;
@@ -32,6 +31,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,19 +52,19 @@ public class ProjectServiceInstanceTest {
     @InjectMocks
     private ProjectServiceImpl projectService;
 
-    private UUID projectBlueprintUuid;
-    private UUID userUuid;
     private ProjectBlueprint projectBlueprint;
     private ProjectInstance projectInstance;
     private ProjectInstanceId projectInstanceId;
+    private UUID testUuid;
+    private UUID userUuid;
 
     @BeforeEach
     void setUp() {
-        projectBlueprintUuid = UUID.randomUUID();
-        userUuid = UUID.randomUUID();
+        testUuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
+        userUuid = UUID.fromString("00000000-0000-0000-0000-000000000002");
         
         projectBlueprint = new ProjectBlueprint()
-                .projectBlueprintUuid(projectBlueprintUuid)
+                .projectBlueprintUuid(testUuid)
                 .title("Test Project")
                 .description("Test Description")
                 .difficulty(DifficultyEnum.MEDIUM)
@@ -72,7 +72,7 @@ public class ProjectServiceInstanceTest {
                 .posterUrl("https://example.com/poster.jpg")
                 .welcomeVideoUrl("https://example.com/welcome.mp4");
         
-        projectInstanceId = new ProjectInstanceId(projectBlueprintUuid, userUuid);
+        projectInstanceId = new ProjectInstanceId(testUuid, userUuid);
         projectInstance = new ProjectInstance();
         projectInstance.setId(projectInstanceId);
         projectInstance.setStatus(StatusEnum.IN_PROGRESS);
@@ -81,16 +81,19 @@ public class ProjectServiceInstanceTest {
     @Test
     @DisplayName("Should create project instance successfully")
     void shouldCreateProjectInstance() {
-        when(projectBlueprintRepository.existsById(projectBlueprintUuid)).thenReturn(true);
-        when(projectBlueprintRepository.findById(projectBlueprintUuid)).thenReturn(Optional.of(projectBlueprint));
-        when(projectInstanceRepository.findById(projectInstanceId)).thenReturn(Optional.empty());
+        // Setup
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectBlueprintRepository.findById(any(UUID.class))).thenReturn(Optional.of(projectBlueprint));
+        when(projectInstanceRepository.findById(any(ProjectInstanceId.class))).thenReturn(Optional.empty());
         when(projectInstanceRepository.save(any(ProjectInstance.class))).thenReturn(projectInstance);
 
+        // Execute
         ProjectDTO result = projectService.createProjectInstance(projectInstance);
 
+        // Verify
         assertNotNull(result);
-        assertEquals(projectBlueprintUuid, result.getBlueprint().getProjectBlueprintUuid());
-        assertEquals(projectBlueprintUuid, result.getInstance().getId().getProjectBlueprintUuid());
+        assertEquals(testUuid, result.getBlueprint().getProjectBlueprintUuid());
+        assertEquals(testUuid, result.getInstance().getId().getProjectBlueprintUuid());
         assertEquals(userUuid, result.getInstance().getId().getUserUuid());
         assertEquals(StatusEnum.IN_PROGRESS, result.getInstance().getStatus());
         verify(projectInstanceRepository, times(1)).save(any(ProjectInstance.class));
@@ -99,69 +102,32 @@ public class ProjectServiceInstanceTest {
     @Test
     @DisplayName("Should throw exception when creating project instance with non-existent blueprint")
     void shouldThrowExceptionWhenCreatingProjectInstanceWithNonExistentBlueprint() {
-        when(projectBlueprintRepository.existsById(projectBlueprintUuid)).thenReturn(false);
+        // Setup
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(false);
 
+        // Execute & Verify
         assertThrows(ProjectBlueprintNotFoundException.class, () -> 
             projectService.createProjectInstance(projectInstance));
     }
 
     @Test
-    @DisplayName("Should get project instance by IDs")
-    void shouldGetProjectInstance() {
-        when(projectBlueprintRepository.existsById(projectBlueprintUuid)).thenReturn(true);
-        when(projectBlueprintRepository.findById(projectBlueprintUuid)).thenReturn(Optional.of(projectBlueprint));
-        when(projectInstanceRepository.existsById(projectInstanceId)).thenReturn(true);
-        when(projectInstanceRepository.findById(projectInstanceId)).thenReturn(Optional.of(projectInstance));
-
-        ProjectDTO result = projectService.getProjectInstance(projectBlueprintUuid, userUuid);
-
-        assertNotNull(result);
-        assertEquals(projectBlueprintUuid, result.getBlueprint().getProjectBlueprintUuid());
-        assertEquals(userUuid, result.getInstance().getId().getUserUuid());
-    }
-
-    @Test
-    @DisplayName("Should throw exception when project instance not found")
-    void shouldThrowExceptionWhenProjectInstanceNotFound() {
-        when(projectBlueprintRepository.existsById(projectBlueprintUuid)).thenReturn(true);
-        when(projectInstanceRepository.existsById(projectInstanceId)).thenReturn(false);
-
-        assertThrows(ProjectInstanceNotFoundException.class, () -> 
-            projectService.getProjectInstance(projectBlueprintUuid, userUuid));
-    }
-
-    @Test
-    @DisplayName("Should get user project instances as DTO with pagination")
-    void shouldGetUserProjectInstancesAsDTO() {
-        List<ProjectInstance> instances = Arrays.asList(projectInstance);
-        Pageable pageable = PageRequest.of(0, 10);
-        
-        when(projectInstanceRepository.findById_UserUuid(userUuid, pageable)).thenReturn(new PageImpl<>(instances));
-        when(projectBlueprintRepository.findById(projectBlueprintUuid)).thenReturn(Optional.of(projectBlueprint));
-
-        List<ProjectDTO> result = projectService.getUserProjectInstancesAsDTO(userUuid, 10, 0);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(projectBlueprintUuid, result.get(0).getBlueprint().getProjectBlueprintUuid());
-        assertEquals(userUuid, result.get(0).getInstance().getId().getUserUuid());
-    }
-
-    @Test
     @DisplayName("Should update project instance successfully")
     void shouldUpdateProjectInstance() {
+        // Setup
         ProjectInstance updatedInstance = new ProjectInstance();
         updatedInstance.setId(projectInstanceId);
         updatedInstance.setStatus(StatusEnum.COMPLETED);
         
-        when(projectBlueprintRepository.existsById(projectBlueprintUuid)).thenReturn(true);
-        when(projectBlueprintRepository.findById(projectBlueprintUuid)).thenReturn(Optional.of(projectBlueprint));
-        when(projectInstanceRepository.existsById(projectInstanceId)).thenReturn(true);
-        when(projectInstanceRepository.findById(projectInstanceId)).thenReturn(Optional.of(projectInstance));
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectBlueprintRepository.findById(any(UUID.class))).thenReturn(Optional.of(projectBlueprint));
+        when(projectInstanceRepository.existsById(any(ProjectInstanceId.class))).thenReturn(true);
+        when(projectInstanceRepository.findById(any(ProjectInstanceId.class))).thenReturn(Optional.of(projectInstance));
         when(projectInstanceRepository.save(any(ProjectInstance.class))).thenReturn(updatedInstance);
 
-        ProjectDTO result = projectService.updateProjectInstance(projectBlueprintUuid, userUuid, updatedInstance);
+        // Execute
+        ProjectDTO result = projectService.updateProjectInstance(testUuid, userUuid, updatedInstance);
 
+        // Verify
         assertNotNull(result);
         assertEquals(StatusEnum.COMPLETED, result.getInstance().getStatus());
         verify(projectInstanceRepository, times(1)).save(any(ProjectInstance.class));
@@ -170,44 +136,101 @@ public class ProjectServiceInstanceTest {
     @Test
     @DisplayName("Should delete project instance successfully")
     void shouldDeleteProjectInstance() {
-        when(projectBlueprintRepository.existsById(projectBlueprintUuid)).thenReturn(true);
-        when(projectInstanceRepository.existsById(projectInstanceId)).thenReturn(true);
-        doNothing().when(projectInstanceRepository).deleteById(projectInstanceId);
+        // Setup
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectInstanceRepository.existsById(any(ProjectInstanceId.class))).thenReturn(true);
+        doNothing().when(projectInstanceRepository).deleteById(any(ProjectInstanceId.class));
 
-        projectService.deleteProjectInstance(projectBlueprintUuid, userUuid);
+        // Execute
+        projectService.deleteProjectInstance(testUuid, userUuid);
 
-        verify(projectInstanceRepository, times(1)).deleteById(projectInstanceId);
+        // Verify
+        verify(projectInstanceRepository, times(1)).deleteById(any(ProjectInstanceId.class));
+    }
+
+    @Test
+    @DisplayName("Should get project instance by IDs")
+    void shouldGetProjectInstance() {
+        // Setup
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectBlueprintRepository.findById(any(UUID.class))).thenReturn(Optional.of(projectBlueprint));
+        when(projectInstanceRepository.findById(any(ProjectInstanceId.class))).thenReturn(Optional.of(projectInstance));
+
+        // Execute
+        ProjectDTO result = projectService.getProjectInstance(testUuid, userUuid);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(testUuid, result.getBlueprint().getProjectBlueprintUuid());
+        assertEquals(userUuid, result.getInstance().getId().getUserUuid());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when project instance not found")
+    void shouldThrowExceptionWhenProjectInstanceNotFound() {
+        // Setup
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectInstanceRepository.findById(any(ProjectInstanceId.class))).thenReturn(Optional.empty());
+
+        // Execute & Verify
+        assertThrows(ProjectInstanceNotFoundException.class, () -> 
+            projectService.getProjectInstance(testUuid, userUuid));
+    }
+
+    @Test
+    @DisplayName("Should get user project instances as DTO")
+    void shouldGetUserProjectInstancesAsDTO() {
+        // Setup
+        List<ProjectInstance> instances = Arrays.asList(projectInstance);
+        
+        when(projectInstanceRepository.findById_UserUuid(any(UUID.class), any(Pageable.class))).thenReturn(new PageImpl<>(instances));
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectBlueprintRepository.findById(any(UUID.class))).thenReturn(Optional.of(projectBlueprint));
+
+        // Execute
+        List<ProjectDTO> result = projectService.getUserProjectInstancesAsDTO(userUuid, 10, 0);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(testUuid, result.get(0).getBlueprint().getProjectBlueprintUuid());
+        assertEquals(userUuid, result.get(0).getInstance().getId().getUserUuid());
     }
 
     @Test
     @DisplayName("Should get project DTO")
     void shouldGetProjectDTO() {
-        when(projectBlueprintRepository.existsById(projectBlueprintUuid)).thenReturn(true);
-        when(projectBlueprintRepository.findById(projectBlueprintUuid)).thenReturn(Optional.of(projectBlueprint));
-        when(projectInstanceRepository.existsById(projectInstanceId)).thenReturn(true);
-        when(projectInstanceRepository.findById(projectInstanceId)).thenReturn(Optional.of(projectInstance));
+        // Setup
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectBlueprintRepository.findById(any(UUID.class))).thenReturn(Optional.of(projectBlueprint));
+        when(projectInstanceRepository.findById(any(ProjectInstanceId.class))).thenReturn(Optional.of(projectInstance));
 
-        ProjectDTO result = projectService.getProjectDTO(projectBlueprintUuid, userUuid);
+        // Execute
+        ProjectDTO result = projectService.getProjectDTO(testUuid, userUuid);
 
+        // Verify
         assertNotNull(result);
-        assertEquals(projectBlueprintUuid, result.getBlueprint().getProjectBlueprintUuid());
+        assertEquals(testUuid, result.getBlueprint().getProjectBlueprintUuid());
         assertEquals(userUuid, result.getInstance().getId().getUserUuid());
     }
 
     @Test
-    @DisplayName("Should get all project instances as DTO with pagination")
+    @DisplayName("Should get all project instances as DTO")
     void shouldGetAllProjectInstancesAsDTO() {
+        // Setup
         List<ProjectInstance> instances = Arrays.asList(projectInstance);
-        Pageable pageable = PageRequest.of(0, 10);
         
-        when(projectInstanceRepository.findAll(pageable)).thenReturn(new PageImpl<>(instances));
-        when(projectBlueprintRepository.findById(projectBlueprintUuid)).thenReturn(Optional.of(projectBlueprint));
+        when(projectInstanceRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(instances));
+        when(projectBlueprintRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectBlueprintRepository.findById(any(UUID.class))).thenReturn(Optional.of(projectBlueprint));
 
+        // Execute
         List<ProjectDTO> result = projectService.getAllProjectInstancesAsDTO(10, 0);
 
+        // Verify
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(projectBlueprintUuid, result.get(0).getBlueprint().getProjectBlueprintUuid());
+        assertEquals(testUuid, result.get(0).getBlueprint().getProjectBlueprintUuid());
         assertEquals(userUuid, result.get(0).getInstance().getId().getUserUuid());
     }
 } 

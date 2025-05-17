@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import pm.little.api.models.Finances;
 import pm.little.api.models.ids.FinancesId;
 import pm.little.api.repositories.FinancesRepository;
+import pm.little.courseservice.TestConfig;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -14,6 +17,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@Import(TestConfig.class)
+@ActiveProfiles("test")
 class FinancesRepositoryTest {
 
     @Autowired

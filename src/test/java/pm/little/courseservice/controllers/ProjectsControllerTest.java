@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -15,6 +16,7 @@ import pm.little.api.models.ProjectBlueprint;
 import pm.little.api.models.enums.DifficultyEnum;
 import pm.little.api.models.enums.StyleEnum;
 import pm.little.courseservice.ProjectService;
+import pm.little.courseservice.TestConfig;
 import pm.little.courseservice.exceptions.ProjectBlueprintNotFoundException;
 
 import java.util.Arrays;
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProjectsApiController.class)
+@Import(TestConfig.class)
 public class ProjectsControllerTest {
 
     @Autowired
@@ -64,7 +67,7 @@ public class ProjectsControllerTest {
     @DisplayName("Should get all project blueprints with pagination")
     void shouldGetAllProjectBlueprintsWithPagination() throws Exception {
         List<ProjectBlueprint> projectBlueprints = Arrays.asList(projectBlueprint);
-        when(projectService.getAllProjectBlueprints(10, 0)).thenReturn(projectBlueprints);
+        when(projectService.getAllProjectBlueprints(eq(10), eq(0))).thenReturn(projectBlueprints);
 
         mockMvc.perform(get("/projects")
                 .param("limit", "10")
@@ -122,7 +125,7 @@ public class ProjectsControllerTest {
     @Test
     @DisplayName("Should get project blueprint by UUID")
     void shouldGetProjectBlueprintByUuid() throws Exception {
-        when(projectService.getProjectBlueprint(projectBlueprintUuid)).thenReturn(projectBlueprint);
+        when(projectService.getProjectBlueprint(eq(projectBlueprintUuid))).thenReturn(projectBlueprint);
 
         mockMvc.perform(get("/projects/{project_blueprint_uuid}", projectBlueprintUuid)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -137,7 +140,7 @@ public class ProjectsControllerTest {
     @Test
     @DisplayName("Should return not found when project blueprint does not exist")
     void shouldReturnNotFoundWhenProjectBlueprintDoesNotExist() throws Exception {
-        when(projectService.getProjectBlueprint(projectBlueprintUuid))
+        when(projectService.getProjectBlueprint(eq(projectBlueprintUuid)))
                 .thenThrow(new ProjectBlueprintNotFoundException(projectBlueprintUuid));
 
         mockMvc.perform(get("/projects/{project_blueprint_uuid}", projectBlueprintUuid)
@@ -176,7 +179,7 @@ public class ProjectsControllerTest {
     @Test
     @DisplayName("Should delete project blueprint")
     void shouldDeleteProjectBlueprint() throws Exception {
-        doNothing().when(projectService).deleteProjectBlueprint(projectBlueprintUuid);
+        doNothing().when(projectService).deleteProjectBlueprint(eq(projectBlueprintUuid));
 
         mockMvc.perform(delete("/projects/{project_blueprint_uuid}", projectBlueprintUuid)
                 .contentType(MediaType.APPLICATION_JSON))

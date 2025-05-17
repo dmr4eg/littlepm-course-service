@@ -18,8 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,11 +35,13 @@ class FinancesControllerTest {
     private UUID projectUuid;
     private UUID userUuid;
     private Finances testFinances;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(financesController).build();
+        objectMapper = new ObjectMapper();
 
         projectUuid = UUID.randomUUID();
         userUuid = UUID.randomUUID();
@@ -49,11 +50,24 @@ class FinancesControllerTest {
         testFinances = new Finances(financesId);
         testFinances.setInvestorGave(1000.0f);
         testFinances.setInvestorReturn(1200.0f);
+        // Set all required fields for validation
+        testFinances.setSpentBudget(800.0f);
+        testFinances.setToysLeft(10.0f);
+        testFinances.setMembersBudget(900.0f);
+        testFinances.setToysPlanned(100.0f);
+        testFinances.setItemsCost(50.0f);
+        testFinances.setCalculatedBudget(5000.0f);
+        testFinances.setToysSold(90.0f);
+        testFinances.setRecommendedPrice(55.0f);
+        testFinances.setExpenseAmount(4500.0f);
+        testFinances.setProfit(500.0f);
+        testFinances.setPricePerItem(45.0f);
+        testFinances.setSoldPrice(4050.0f);
     }
 
     @Test
     void testGetFinances() throws Exception {
-        when(financesService.getFinancesById(any(), any())).thenReturn(testFinances);
+        when(financesService.getFinancesById(eq(projectUuid), eq(userUuid))).thenReturn(testFinances);
 
         mockMvc.perform(get("/finances/{project_uuid}/{user_uuid}", projectUuid, userUuid)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -64,11 +78,11 @@ class FinancesControllerTest {
 
     @Test
     void testCreateFinances() throws Exception {
-        when(financesService.createFinances(any())).thenReturn(testFinances);
+        when(financesService.createFinances(any(Finances.class))).thenReturn(testFinances);
 
         mockMvc.perform(post("/finances")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":{\"project_blueprint_uuid\":\"" + projectUuid + "\",\"user_uuid\":\"" + userUuid + "\"},\"investor_gave\":1000,\"investor_return\":1200}"))
+                .content(objectMapper.writeValueAsString(testFinances)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.investor_gave").value(1000.0))
                 .andExpect(jsonPath("$.investor_return").value(1200.0));
@@ -76,11 +90,11 @@ class FinancesControllerTest {
 
     @Test
     void testUpdateFinances() throws Exception {
-        when(financesService.updateFinances(any(), any(), any())).thenReturn(testFinances);
+        when(financesService.updateFinances(eq(projectUuid), eq(userUuid), any(Finances.class))).thenReturn(testFinances);
 
         mockMvc.perform(put("/finances/{project_uuid}/{user_uuid}", projectUuid, userUuid)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":{\"project_blueprint_uuid\":\"" + projectUuid + "\",\"user_uuid\":\"" + userUuid + "\"},\"investor_gave\":1500,\"investor_return\":1800}"))
+                .content(objectMapper.writeValueAsString(testFinances)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.investor_gave").value(1000.0))
                 .andExpect(jsonPath("$.investor_return").value(1200.0));
@@ -88,6 +102,8 @@ class FinancesControllerTest {
 
     @Test
     void testDeleteFinances() throws Exception {
+        doNothing().when(financesService).deleteFinances(eq(projectUuid), eq(userUuid));
+
         mockMvc.perform(delete("/finances/{project_uuid}/{user_uuid}", projectUuid, userUuid))
                 .andExpect(status().isNoContent());
     }
@@ -95,7 +111,7 @@ class FinancesControllerTest {
     @Test
     void testListFinances() throws Exception {
         List<Finances> finances = Arrays.asList(testFinances);
-        when(financesService.getAllFinances(any(), any())).thenReturn(finances);
+        when(financesService.getAllFinances(eq(10), eq(0))).thenReturn(finances);
 
         mockMvc.perform(get("/finances")
                 .param("limit", "10")

@@ -4,10 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import pm.little.api.models.ProjectBlueprint;
 import pm.little.api.models.enums.DifficultyEnum;
 import pm.little.api.models.enums.StyleEnum;
 import pm.little.api.repositories.ProjectBlueprintRepository;
+import pm.little.courseservice.TestConfig;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +18,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@Import(TestConfig.class)
+@ActiveProfiles("test")
 class ProjectRepositoryTest {
 
     @Autowired

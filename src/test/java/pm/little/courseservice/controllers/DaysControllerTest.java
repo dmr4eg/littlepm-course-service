@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -46,11 +45,12 @@ class DaysControllerTest {
         testDay.setDayBlueprintUuid(testDayUuid);
         testDay.setTitle("Test Day");
         testDay.setDescription("Test Description");
+        testDay.setText("Test Text Content");
     }
 
     @Test
     void testGetDay() throws Exception {
-        when(dayService.getDayBlueprint(any())).thenReturn(testDay);
+        when(dayService.getDayBlueprint(eq(testDayUuid))).thenReturn(testDay);
 
         mockMvc.perform(get("/days/{uuid}", testDayUuid)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -61,11 +61,11 @@ class DaysControllerTest {
 
     @Test
     void testCreateDay() throws Exception {
-        when(dayService.createDayBlueprint(any())).thenReturn(testDay);
+        when(dayService.createDayBlueprint(any(DayBlueprint.class))).thenReturn(testDay);
 
         mockMvc.perform(post("/days")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\":\"Test Day\",\"description\":\"Test Description\"}"))
+                .content("{\"dayBlueprintUuid\":\"" + testDayUuid + "\",\"title\":\"Test Day\",\"description\":\"Test Description\",\"text\":\"Test Text Content\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Day"))
                 .andExpect(jsonPath("$.description").value("Test Description"));
@@ -73,11 +73,11 @@ class DaysControllerTest {
 
     @Test
     void testUpdateDay() throws Exception {
-        when(dayService.updateDayBlueprint(any(), any())).thenReturn(testDay);
+        when(dayService.updateDayBlueprint(eq(testDayUuid), any(DayBlueprint.class))).thenReturn(testDay);
 
         mockMvc.perform(put("/days/{uuid}", testDayUuid)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\":\"Updated Day\",\"description\":\"Updated Description\"}"))
+                .content("{\"dayBlueprintUuid\":\"" + testDayUuid + "\",\"title\":\"Updated Day\",\"description\":\"Updated Description\",\"text\":\"Updated Text\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Day"))
                 .andExpect(jsonPath("$.description").value("Test Description"));
@@ -85,6 +85,8 @@ class DaysControllerTest {
 
     @Test
     void testDeleteDay() throws Exception {
+        doNothing().when(dayService).deleteDayBlueprint(eq(testDayUuid));
+
         mockMvc.perform(delete("/days/{uuid}", testDayUuid))
                 .andExpect(status().isNoContent());
     }
@@ -92,7 +94,7 @@ class DaysControllerTest {
     @Test
     void testListDays() throws Exception {
         List<DayBlueprint> days = Arrays.asList(testDay);
-        when(dayService.getAllDayBlueprints(any(), any())).thenReturn(days);
+        when(dayService.getAllDayBlueprints(eq(10), eq(0))).thenReturn(days);
 
         mockMvc.perform(get("/days")
                 .param("limit", "10")
