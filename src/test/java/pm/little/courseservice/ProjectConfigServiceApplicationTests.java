@@ -8,6 +8,12 @@ class ProjectConfigServiceApplicationTests {
 
     @Test
     void contextLoads() {
+        // This test verifies that the Spring application context loads successfully.
+    }
+
+    @Test
+    void testApplicationStarts() {
+        // This test verifies that the application starts without errors.
     }
 
 }
