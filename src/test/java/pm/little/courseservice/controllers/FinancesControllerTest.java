@@ -83,7 +83,7 @@ class FinancesControllerTest {
         mockMvc.perform(post("/finances")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testFinances)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.investor_gave").value(1000.0))
                 .andExpect(jsonPath("$.investor_return").value(1200.0));
     }

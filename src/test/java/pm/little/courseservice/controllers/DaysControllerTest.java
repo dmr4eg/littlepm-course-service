@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pm.little.api.controllers.implementation.DaysApiController;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@ActiveProfiles("test")
 class DaysControllerTest {
 
     private MockMvc mockMvc;
@@ -33,12 +35,14 @@ class DaysControllerTest {
 
     private DayBlueprint testDay;
     private UUID testDayUuid;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(daysController).build();
-
+        objectMapper = new ObjectMapper();
+        
         testDayUuid = UUID.randomUUID();
         
         testDay = new DayBlueprint();
@@ -65,19 +69,25 @@ class DaysControllerTest {
 
         mockMvc.perform(post("/days")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"dayBlueprintUuid\":\"" + testDayUuid + "\",\"title\":\"Test Day\",\"description\":\"Test Description\",\"text\":\"Test Text Content\"}"))
-                .andExpect(status().isOk())
+                .content(objectMapper.writeValueAsString(testDay)))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("Test Day"))
                 .andExpect(jsonPath("$.description").value("Test Description"));
     }
 
     @Test
     void testUpdateDay() throws Exception {
+        DayBlueprint updatedDay = new DayBlueprint();
+        updatedDay.setDayBlueprintUuid(testDayUuid);
+        updatedDay.setTitle("Updated Day");
+        updatedDay.setDescription("Updated Description");
+        updatedDay.setText("Updated Text");
+        
         when(dayService.updateDayBlueprint(eq(testDayUuid), any(DayBlueprint.class))).thenReturn(testDay);
 
         mockMvc.perform(put("/days/{uuid}", testDayUuid)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"dayBlueprintUuid\":\"" + testDayUuid + "\",\"title\":\"Updated Day\",\"description\":\"Updated Description\",\"text\":\"Updated Text\"}"))
+                .content(objectMapper.writeValueAsString(updatedDay)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Day"))
                 .andExpect(jsonPath("$.description").value("Test Description"));

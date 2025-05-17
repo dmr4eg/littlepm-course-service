@@ -56,7 +56,7 @@ public class ProjectsApiController implements ProjectsApi {
             return ResponseEntity.badRequest().build();
         }
         ProjectBlueprint created = projectService.createProjectBlueprint(projectBlueprint);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(created);
     }
 
     /**

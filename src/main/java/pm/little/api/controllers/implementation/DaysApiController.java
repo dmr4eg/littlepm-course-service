@@ -77,7 +77,7 @@ public class DaysApiController implements DaysApi {
             return ResponseEntity.badRequest().build();
         }
         DayBlueprint created = dayService.createDayBlueprint(dayBlueprint);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(created);
     }
 
 }
